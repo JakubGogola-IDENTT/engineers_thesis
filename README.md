@@ -40,4 +40,4 @@ ___
 
 W katalogu `/latex` znajdują się pliki źródłowe opisowej części pracy.
 
-W katalogu `/src` znajdują się pliki źródłowe z implementacją oraz opisem algorytmu.
+W katalogu `/implementation` znajdują się pliki źródłowe z implementacją oraz opisem algorytmu.
