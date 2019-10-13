@@ -26,6 +26,6 @@ func (config *Config) parseFlags() {
 }
 
 // Init - initializes config
-func Init() {
-
+func (config *Config) Init() {
+	config.parseFlags()
 }
