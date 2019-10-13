@@ -28,4 +28,5 @@ func (config *Config) parseFlags() {
 // Init - initializes config
 func (config *Config) Init() {
 	config.parseFlags()
+	flag.Parse()
 }
