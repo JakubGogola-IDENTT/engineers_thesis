@@ -1,6 +1,9 @@
 package config
 
-import "flag"
+import (
+	"flag"
+	"fmt"
+)
 
 // Config - configuration of algorithn
 type Config struct {
@@ -26,7 +29,11 @@ func (config *Config) parseFlags() {
 }
 
 // Init - initializes config
-func (config *Config) Init() {
+func (config *Config) Init(fromFile bool) {
+	if fromFile {
+		fmt.Println("Read config from file")
+	}
+
 	config.parseFlags()
 	flag.Parse()
 }
