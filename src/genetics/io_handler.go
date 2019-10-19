@@ -30,5 +30,11 @@ func readImage(pathToImage string) image.Image {
 		log.Fatal("Can't decode image. Check if given file has correct format.")
 	}
 
+	fmt.Println(imageData.Bounds())
+
 	return imageData
+}
+
+func saveImage(imageToSave image.Image) {
+
 }

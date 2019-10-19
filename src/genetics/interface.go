@@ -2,14 +2,14 @@ package genetics
 
 import "image"
 
-// Speciment represents image as speciment of generation
-type Speciment struct {
-	file image.Image
-}
-
 // Genetics is interface for genetics module
 type Genetics interface {
 	mutate()
-	score()
+	fitness()
 	cross()
+}
+
+// Generation represents set of speciments (images) in single iteration (= generation)
+type Generation struct {
+	speciments []image.Image
 }
