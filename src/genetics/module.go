@@ -1,35 +1,48 @@
-package module
+package genetics
 
 import (
 	"image"
-	"image/color"
 	"math/rand"
+	"thesis/genetics/helpers"
 )
 
-func mutate(spec image.RGBA) {
+// Mutate mutates random rectangle in speciment image
+func (s *Speciment) Mutate() {
 	// maximal values of x and y in given Image with border
-	borderX := spec.Bounds().Max.X - 1
-	borderY := spec.Bounds().Max.Y - 1
+	maxPt := image.Pt(s.Spec.Bounds().Max.X-1, s.Spec.Bounds().Max.Y-1)
 
 	// x and y of left upper corner of mutated rectangle
-	minX := rand.Intn(borderX)
-	minY := rand.Intn(borderY)
+	minPt := image.Pt(rand.Intn(maxPt.X), rand.Intn(maxPt.Y))
 
 	// width and height of mutated rectangle
-	width := rand.Intn(borderX - minX - 1)
-	height := rand.Intn(borderY - minY + 1)
+	width := rand.Intn(maxPt.X - minPt.X - 1)
+	height := rand.Intn(maxPt.Y - minPt.Y + 1)
 
-	for x := minX; x <= minX+width; x++ {
-		for y := minY; y <= minY+height; y++ {
-			spec.Set(x, y, getRandomColor())
+	for x := minPt.X; x <= minPt.X+width; x++ {
+		for y := minPt.Y; y <= minPt.Y+height; y++ {
+			s.Spec.Set(x, y, helpers.GetRandomColor()) // TODO: add mixing colors
 		}
 	}
 }
 
-func getRandomColor() color.Color {
-	r := uint8(rand.Intn(256))
-	g := uint8(rand.Intn(256))
-	b := uint8(rand.Intn(256))
+// Fitness return fitness of speciment to original image
+func (s *Speciment) Fitness(originalImage image.Image) {
+	var score float64
 
-	return color.RGBA{R: r, G: g, B: b, A: 0}
+	// bounds of images
+	bounds := image.Pt(originalImage.Bounds().Max.X, originalImage.Bounds().Max.Y)
+
+	// Iterate over all pixels of speciment
+	for x := 0; x < bounds.X; x++ {
+		for y := 0; y < bounds.Y; y++ {
+			score += helpers.CompareColors(s.Spec.At(x, y), originalImage.At(x, y))
+		}
+	}
+
+	s.Score = 1.0 - score/(float64(bounds.X*bounds.Y*4*256))
+}
+
+// Cross crosses speciment with antoher image
+func (s *Speciment) Cross(spec image.RGBA) {
+
 }
