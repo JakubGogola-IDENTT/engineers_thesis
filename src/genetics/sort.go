@@ -4,33 +4,33 @@ import (
 	"sort"
 )
 
-// ByScore is wrapping type for sorting algorithm
-type ByScore []Speciment
+// byScore is wrapping type for sorting algorithm
+type byScore []Specimen
 
 // Len returns length of speciments array
-func (s ByScore) Len() int {
+func (s byScore) Len() int {
 	return len(s)
 }
 
 // Swap swaps indices of two speciments in array
-func (s ByScore) Swap(i, j int) {
+func (s byScore) Swap(i, j int) {
 	s[i], s[j] = s[j], s[i]
 }
 
 // Less returns speciment with smaller score
-func (s ByScore) Less(i, j int) bool {
+func (s byScore) Less(i, j int) bool {
 	return s[i].Score < s[j].Score
 }
 
-// SortSpeciments sorts speciments in specified order (default - increasing)
+// sortSpeciments sorts speciments in specified order (default - increasing)
 // Returns sorted slice
-func SortSpeciments(speciments []Speciment, reverse bool) []Speciment {
-	sort.Sort(ByScore(speciments))
+func sortSpeciments(specimens []Specimen, reverse bool) []Specimen {
+	sort.Sort(byScore(specimens))
 
 	// Reverse if specified
 	if reverse {
-		sort.Reverse(ByScore(speciments))
+		sort.Reverse(byScore(specimens))
 	}
 
-	return speciments
+	return specimens
 }

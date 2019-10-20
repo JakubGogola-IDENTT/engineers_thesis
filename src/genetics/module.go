@@ -6,7 +6,7 @@ import (
 )
 
 // Mutate mutates random rectangle in speciment image
-func (s *Speciment) Mutate() {
+func (s *Specimen) Mutate() {
 	// maximal values of x and y in given Image with border
 	maxPt := image.Pt(s.Spec.Bounds().Max.X-1, s.Spec.Bounds().Max.Y-1)
 
@@ -28,7 +28,7 @@ func (s *Speciment) Mutate() {
 }
 
 // Fitness return fitness of speciment to original image
-func (s *Speciment) Fitness(originalImage image.Image) {
+func (s *Specimen) Fitness(originalImage image.Image) {
 	var score float64
 
 	// bounds of images
@@ -45,6 +45,6 @@ func (s *Speciment) Fitness(originalImage image.Image) {
 }
 
 // Cross crosses speciment with antoher image
-func (s *Speciment) Cross(spec image.RGBA) {
+func (s *Specimen) Cross(spec image.RGBA) {
 
 }

@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-func readImage(pathToImage string) image.Image {
+func (d *DNA) readImage(pathToImage string) {
 	// TODO: should be configurable by user
 	// Register image format
 	image.RegisterFormat("jpg", "jpg", jpeg.Decode, jpeg.DecodeConfig)
@@ -30,11 +30,9 @@ func readImage(pathToImage string) image.Image {
 		log.Fatal("Can't decode image. Check if given file has correct format.")
 	}
 
-	fmt.Println(imageData.Bounds())
-
-	return imageData
+	d.originalImage = imageData
 }
 
-func saveImage(imageToSave image.Image) {
+func (d *DNA) saveImage(imageToSave image.Image) {
 
 }

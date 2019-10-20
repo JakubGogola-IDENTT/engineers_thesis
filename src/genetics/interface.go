@@ -12,8 +12,8 @@ type Genetics interface {
 	Cross(spec image.RGBA)
 }
 
-// Speciment represents set of speciments (images) in single iteration (= generation)
-type Speciment struct {
+// Specimen represents set of specimens (images) in single iteration (= generation)
+type Specimen struct {
 	Spec  image.RGBA
 	Score float64
 }
@@ -21,6 +21,7 @@ type Speciment struct {
 // DNA contains config, speciments set and root image for algorithm
 type DNA struct {
 	originalImage image.Image
-	speciments    []Speciment
+	specimens     []Specimen
+	bestSpecs     []Specimen
 	config        config.Config
 }
