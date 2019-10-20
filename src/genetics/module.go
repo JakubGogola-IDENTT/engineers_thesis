@@ -3,7 +3,6 @@ package genetics
 import (
 	"image"
 	"math/rand"
-	"thesis/genetics/helpers"
 )
 
 // Mutate mutates random rectangle in speciment image
@@ -20,7 +19,10 @@ func (s *Speciment) Mutate() {
 
 	for x := minPt.X; x <= minPt.X+width; x++ {
 		for y := minPt.Y; y <= minPt.Y+height; y++ {
-			s.Spec.Set(x, y, helpers.GetRandomColor()) // TODO: add mixing colors
+			// get random color for rectangle
+			randomColor := GetRandomColor()
+
+			s.Spec.Set(x, y, MixColors(randomColor, s.Spec.At(x, y))) // TODO: add mixing colors
 		}
 	}
 }
@@ -35,7 +37,7 @@ func (s *Speciment) Fitness(originalImage image.Image) {
 	// Iterate over all pixels of speciment
 	for x := 0; x < bounds.X; x++ {
 		for y := 0; y < bounds.Y; y++ {
-			score += helpers.CompareColors(s.Spec.At(x, y), originalImage.At(x, y))
+			score += CompareColors(s.Spec.At(x, y), originalImage.At(x, y))
 		}
 	}
 

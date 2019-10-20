@@ -9,5 +9,5 @@ func main() {
 	config := &config.Config{}
 	config.Init(false)
 
-	genetics.Run("./mona.jpg", g genetics.Genetics)
+	genetics.Run("./mona.jpg")
 }

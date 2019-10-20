@@ -1,12 +1,11 @@
-package helpers
+package genetics
 
 import (
 	"sort"
-	"thesis/genetics"
 )
 
 // ByScore is wrapping type for sorting algorithm
-type ByScore []genetics.Speciment
+type ByScore []Speciment
 
 // Len returns length of speciments array
 func (s ByScore) Len() int {
@@ -25,7 +24,7 @@ func (s ByScore) Less(i, j int) bool {
 
 // SortSpeciments sorts speciments in specified order (default - increasing)
 // Returns sorted slice
-func SortSpeciments(speciments []genetics.Speciment, reverse bool) []genetics.Speciment {
+func SortSpeciments(speciments []Speciment, reverse bool) []Speciment {
 	sort.Sort(ByScore(speciments))
 
 	// Reverse if specified
