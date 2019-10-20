@@ -31,5 +31,5 @@ func getRandomColor() color.Color {
 	g := uint8(rand.Intn(256))
 	b := uint8(rand.Intn(256))
 
-	return color.RGBA{R: r, G: g, B: b, A: 255}
+	return color.RGBA{R: r, G: g, B: b, A: 0}
 }
