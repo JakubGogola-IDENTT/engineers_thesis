@@ -29,6 +29,7 @@ func sortSpeciments(specimens []Specimen, reverse bool) []Specimen {
 
 	// Reverse if specified
 	if reverse {
+		// TODO: return reversed specimens
 		sort.Reverse(byScore(specimens))
 	}
 

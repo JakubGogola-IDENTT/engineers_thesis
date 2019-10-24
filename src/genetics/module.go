@@ -22,7 +22,7 @@ func (s *Specimen) Mutate() {
 			// get random color for rectangle
 			randomColor := GetRandomColor()
 
-			s.Spec.Set(x, y, MixColors(randomColor, s.Spec.At(x, y))) // TODO: add mixing colors
+			s.Spec.Set(x, y, MixColors(randomColor, s.Spec.At(x, y)))
 		}
 	}
 }

@@ -4,5 +4,4 @@ package genetics
 func Run(pathToImage string) {
 	dna := DNA{}
 	dna.readImage(pathToImage)
-
 }
