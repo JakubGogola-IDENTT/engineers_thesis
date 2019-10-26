@@ -8,19 +8,20 @@ import (
 // Mutate mutates random rectangle in speciment image
 func (s *Specimen) Mutate() {
 	// maximal values of x and y in given Image with border
-	maxPt := image.Pt(s.Spec.Bounds().Max.X-1, s.Spec.Bounds().Max.Y-1)
+	maxPt := image.Pt(s.Spec.Bounds().Max.X, s.Spec.Bounds().Max.Y)
 
 	// x and y of left upper corner of mutated rectangle
 	minPt := image.Pt(rand.Intn(maxPt.X), rand.Intn(maxPt.Y))
 
 	// width and height of mutated rectangle
-	width := rand.Intn(maxPt.X - minPt.X - 1)
-	height := rand.Intn(maxPt.Y - minPt.Y + 1)
+	width := rand.Intn(maxPt.X - minPt.X)
+	height := rand.Intn(maxPt.Y - minPt.Y)
+
+	// get random color for rectangle
+	randomColor := GetRandomColor()
 
 	for x := minPt.X; x <= minPt.X+width; x++ {
 		for y := minPt.Y; y <= minPt.Y+height; y++ {
-			// get random color for rectangle
-			randomColor := GetRandomColor()
 
 			s.Spec.Set(x, y, MixColors(randomColor, s.Spec.At(x, y)))
 		}
@@ -41,10 +42,19 @@ func (s *Specimen) Fitness(originalImage image.Image) {
 		}
 	}
 
-	s.Score = 1.0 - score/(float64(bounds.X*bounds.Y*4*256))
+	// s.Score = 1.0 - score/(float64(bounds.X*bounds.Y*4*256))
+
+	s.Score = score * score
 }
 
 // Cross crosses speciment with antoher image
-func (s *Specimen) Cross(spec image.RGBA) {
+func (s *Specimen) Cross(spec Specimen) {
+	// maximal values of x and y in given Image with border
+	maxPt := image.Pt(s.Spec.Bounds().Max.X, s.Spec.Bounds().Max.Y)
 
+	for x := 0; x < maxPt.X; x++ {
+		for y := 0; y < maxPt.Y; y++ {
+			s.Spec.Set(x, y, MixColors(s.Spec.At(x, y), spec.Spec.At(x, y)))
+		}
+	}
 }
