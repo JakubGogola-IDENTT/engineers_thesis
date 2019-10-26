@@ -54,6 +54,8 @@ func (d *DNA) initFirstGeneration() {
 }
 
 func (d *DNA) evolve() {
+	fmt.Printf("Num of generations: %d\n", d.config.NumOfIterations)
+
 	// evelution loop
 	for i := uint(0); i <= d.config.NumOfIterations; i++ {
 		for i, spec := range d.specimens {
