@@ -3,8 +3,8 @@ package genetics
 import (
 	"fmt"
 	"image"
+	"math/rand"
 	"os"
-	"sync"
 )
 
 type specToProcess struct {
@@ -12,76 +12,54 @@ type specToProcess struct {
 }
 
 func (d *DNA) worker(input chan<- specToProcess, output chan<- Specimen) {
-	var mu sync.Mutex
-
 	for {
+		// make and send request for speciment to process
 		request := specToProcess{make(chan Specimen)}
-
 		input <- request
+
+		// get spec
 		spec := <-request.spec
-		mu.Lock()
+
 		if spec.Spec.Bounds() == image.Rect(0, 0, 0, 0) {
 			continue
 		}
 
-		// process specimen
 		spec.Mutate()
-		// spec.Fitness(originalImage)
-
-		mu.Unlock()
-
-		// resend specimen
+		// spec.Fitness(d.originalImage)
 		output <- spec
 	}
 }
 
 func (d *DNA) dispatcher(requestChan <-chan specToProcess, responseChan <-chan Specimen) {
-	// specimens to process
-	toProcess := d.specimens
-	d.specimens = d.specimens[:0]
+	// counter of generations
+	generation := uint(1)
 
-	iteration := uint(1)
+	var processed []Specimen
 
 	for {
 		select {
 		case request := <-requestChan:
-			if len(toProcess) <= 0 {
-				request.spec <- Specimen{}
-			} else {
-				request.spec <- toProcess[0]
-				toProcess = toProcess[1:]
-			}
+			request.spec <- d.specimens[rand.Intn(len(d.specimens))]
 		case response := <-responseChan:
-			d.specimens = append(d.specimens, response)
+			processed = append(processed, response)
 		default:
 		}
 
-		if uint(len(d.specimens)) < d.config.SizeOfGeneration {
+		if uint(len(processed)) < 2 {
 			continue
 		}
 
-		// d.findBestSpecimens()
+		fmt.Printf("Len of processed: %d\n", len(processed))
 
-		// for i, spec := range d.specimens {
-		// 	spec.Cross(d.bestSpecs[i%int(d.config.NumOfBest)])
-		// 	d.specimens[i] = spec
-		// }
+		processed = processed[:0]
 
-		// d.specimens = append(d.bestSpecs, d.specimens...)
+		fmt.Printf("Generation: %d\n", generation)
 
-		fmt.Printf("Generation: %d\n", iteration)
-		iteration++
-
-		toProcess = d.specimens
-		d.specimens = d.specimens[:0]
-
-		if iteration == d.config.NumOfIterations {
-			for i, spec := range d.bestSpecs {
-				imageName := fmt.Sprintf("img_%d.png", i)
-				d.saveImage(spec.Spec, imageName)
-			}
-
+		// exit when all iterations were done
+		if generation == d.config.NumOfIterations {
 			os.Exit(1)
 		}
+
+		generation++
 	}
 }

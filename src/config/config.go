@@ -1,55 +1,51 @@
 package config
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
 )
 
-// Config - configuration of algorithn
-type Config struct {
-	// NumOfIteration - maximal number of generations
-	NumOfIterations uint
-
-	// SizeOfGenerations - number of speciments in generations
-	SizeOfGeneration uint
-
-	// Operators - genetic operators used in algorithm
-	Operator string
-
-	// SelectionType - type of selecting speciments to mutation
-	SelectionType string
-
-	// FromConfig - if set, config should be read from file
-	FromFile bool
-
-	// PathToImage - path to original image
-	PathToImage string
-
-	// NumOfBest - number of best speciments used to cross
-	NumOfBest uint
-
-	// NumOfThreads - number of threads used to images processing
-	NumOfThreads uint
-}
-
 // parseFlags - parses arguments passed to program in console
-func (config *Config) parseFlags() {
-	flag.BoolVar(&config.FromFile, "f", false, "read config from file")
-	flag.UintVar(&config.NumOfIterations, "i", 100, "maximal number of generations")
-	flag.UintVar(&config.SizeOfGeneration, "g", 300, "size of generation")
-	flag.UintVar(&config.NumOfBest, "b", 2, "number of best specimens")
-	flag.UintVar(&config.NumOfThreads, "t", 1, "number of threads")
-	flag.StringVar(&config.Operator, "o", CROSSING, "genetic operator")
-	flag.StringVar(&config.SelectionType, "s", MIXED, "type of selecting speciments to")
-	flag.StringVar(&config.PathToImage, "d", "./mona.jpg", "path to original image")
+func (c *Config) parseFlags() {
+	flag.StringVar(&c.FromFile, "from-file", "", "read config from given file")
+	flag.UintVar(&c.NumOfIterations, "generations", 100, "maximal number of generations")
+	flag.UintVar(&c.SizeOfGeneration, "generation-size", 300, "size of generation")
+	flag.UintVar(&c.NumOfBest, "best", 10, "number of best specimens")
+	flag.UintVar(&c.NumOfThreads, "threads", 10, "number of threads")
+	flag.StringVar(&c.SelectionType, "selection", MIXED, "type of selecting speciments to")
+	flag.StringVar(&c.PathToImage, "image-dir", "./mona.jpg", "path to original image")
+	flag.Float64Var(&c.MutationChance, "mutation-chance", 0.2, "chance of mutation")
 }
 
 // Init - initializes config
-func (config *Config) Init(fromFile bool) { // TODO: add reading from file guard
+func (c *Config) Init(fromFile bool) { // TODO: add reading from file guard
 	if fromFile {
 		fmt.Println("Read config from file")
 	}
 
-	config.parseFlags()
+	c.parseFlags()
 	flag.Parse()
+
+	// read from file if path is not empty
+	if c.FromFile != "" {
+		c.readFromFile()
+	}
+}
+
+func (c *Config) readFromFile() {
+	jsonFile, err := os.Open(c.FromFile)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer jsonFile.Close()
+
+	bytesValue, _ := ioutil.ReadAll(jsonFile)
+
+	json.Unmarshal(bytesValue, &c)
 }

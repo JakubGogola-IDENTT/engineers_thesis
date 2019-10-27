@@ -68,28 +68,4 @@ func (d *DNA) evolve() {
 	for {
 	}
 
-	// evelution loop
-	// for i := uint(0); i <= d.config.NumOfIterations; i++ {
-	// 	for i, spec := range d.specimens {
-	// 		spec.Mutate()
-
-	// 		spec.Fitness(d.originalImage)
-	// 		d.specimens[i] = spec
-	// 	}
-
-	// 	d.findBestSpecimens()
-
-	// 	for i, spec := range d.specimens {
-	// 		spec.Cross(d.bestSpecs[i%int(d.config.NumOfBest)])
-	// 		d.specimens[i] = spec
-	// 	}
-
-	// 	d.specimens = append(d.bestSpecs, d.specimens...)
-	// 	fmt.Printf("Generation: %d\n", i)
-	// }
-
-	// for i, spec := range d.bestSpecs {
-	// 	imageName := fmt.Sprintf("img_%d.png", i)
-	// 	d.saveImage(spec.Spec, imageName)
-	// }
 }

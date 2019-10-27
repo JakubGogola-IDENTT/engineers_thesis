@@ -2,6 +2,7 @@ package genetics
 
 import (
 	"image"
+	"sync"
 	"thesis/config"
 )
 
@@ -25,4 +26,5 @@ type DNA struct {
 	bestSpecs     []Specimen
 	crossed       []Specimen
 	config        config.Config
+	mu            sync.Mutex
 }
