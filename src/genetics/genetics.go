@@ -34,7 +34,6 @@ func (d *DNA) findBestSpecimens() {
 	d.specimens = sortSpeciments(d.specimens, true)
 	d.bestSpecs = d.specimens[:d.config.NumOfBest]
 
-	// tricky!!!!!!
 	d.specimens = d.specimens[d.config.NumOfBest:]
 }
 
@@ -56,16 +55,8 @@ func (d *DNA) initFirstGeneration() {
 func (d *DNA) evolve() {
 	fmt.Printf("Num of generations: %d\n", d.config.NumOfIterations)
 
-	requestChan := make(chan specToProcess)
-	responseChan := make(chan Specimen)
+	for i := uint(0); i < d.config.NumOfIterations; i++ {
 
-	for i := uint(0); i < d.config.NumOfThreads; i++ {
-		go d.worker(requestChan, responseChan)
-	}
-
-	go d.dispatcher(requestChan, responseChan)
-
-	for {
 	}
 
 }
