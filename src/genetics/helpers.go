@@ -1,6 +1,7 @@
 package genetics
 
 import (
+	"image"
 	"image/color"
 	"math"
 	"math/rand"
@@ -41,4 +42,15 @@ func MixColors(c1, c2 color.Color) (c color.RGBA) {
 	c.A = 255
 
 	return c
+}
+
+// GetRandomRectBounds returns random bounds of rectangle
+func GetRandomRectBounds(rect image.Rectangle) image.Rectangle {
+	// x and y of left upper corner of mutated rectangle
+	minPt := image.Pt(rand.Intn(rect.Max.X), rand.Intn(rect.Max.Y))
+
+	// width and height of mutated rectangle
+	maxPt := image.Pt(minPt.X+rand.Intn(rect.Max.X-minPt.X), minPt.Y+rand.Intn(rect.Max.Y-minPt.Y))
+
+	return image.Rectangle{minPt, maxPt}
 }

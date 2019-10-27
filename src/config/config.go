@@ -27,6 +27,9 @@ type Config struct {
 
 	// NumOfBest - number of best speciments used to cross
 	NumOfBest uint
+
+	// NumOfThreads - number of threads used to images processing
+	NumOfThreads uint
 }
 
 // parseFlags - parses arguments passed to program in console
@@ -35,6 +38,7 @@ func (config *Config) parseFlags() {
 	flag.UintVar(&config.NumOfIterations, "i", 100, "maximal number of generations")
 	flag.UintVar(&config.SizeOfGeneration, "g", 300, "size of generation")
 	flag.UintVar(&config.NumOfBest, "b", 2, "number of best specimens")
+	flag.UintVar(&config.NumOfThreads, "t", 1, "number of threads")
 	flag.StringVar(&config.Operator, "o", CROSSING, "genetic operator")
 	flag.StringVar(&config.SelectionType, "s", MIXED, "type of selecting speciments to")
 	flag.StringVar(&config.PathToImage, "d", "./mona.jpg", "path to original image")

@@ -23,5 +23,6 @@ type DNA struct {
 	originalImage image.Image
 	specimens     []Specimen
 	bestSpecs     []Specimen
+	crossed       []Specimen
 	config        config.Config
 }

@@ -56,27 +56,40 @@ func (d *DNA) initFirstGeneration() {
 func (d *DNA) evolve() {
 	fmt.Printf("Num of generations: %d\n", d.config.NumOfIterations)
 
+	requestChan := make(chan specToProcess)
+	responseChan := make(chan Specimen)
+
+	for i := uint(0); i < d.config.NumOfThreads; i++ {
+		go d.worker(requestChan, responseChan)
+	}
+
+	go d.dispatcher(requestChan, responseChan)
+
+	for {
+	}
+
 	// evelution loop
-	for i := uint(0); i <= d.config.NumOfIterations; i++ {
-		for i, spec := range d.specimens {
-			spec.Mutate()
-			spec.Fitness(d.originalImage)
-			d.specimens[i] = spec // TODO: add pointer
-		}
+	// for i := uint(0); i <= d.config.NumOfIterations; i++ {
+	// 	for i, spec := range d.specimens {
+	// 		spec.Mutate()
 
-		d.findBestSpecimens()
+	// 		spec.Fitness(d.originalImage)
+	// 		d.specimens[i] = spec
+	// 	}
 
-		for i, spec := range d.specimens {
-			spec.Cross(d.bestSpecs[i%int(d.config.NumOfBest)])
-			d.specimens[i] = spec
-		}
+	// 	d.findBestSpecimens()
 
-		d.specimens = append(d.bestSpecs, d.specimens...)
-		fmt.Printf("Generation: %d\n", i)
-	}
+	// 	for i, spec := range d.specimens {
+	// 		spec.Cross(d.bestSpecs[i%int(d.config.NumOfBest)])
+	// 		d.specimens[i] = spec
+	// 	}
 
-	for i, spec := range d.bestSpecs {
-		imageName := fmt.Sprintf("img_%d.png", i)
-		d.saveImage(spec.Spec, imageName)
-	}
+	// 	d.specimens = append(d.bestSpecs, d.specimens...)
+	// 	fmt.Printf("Generation: %d\n", i)
+	// }
+
+	// for i, spec := range d.bestSpecs {
+	// 	imageName := fmt.Sprintf("img_%d.png", i)
+	// 	d.saveImage(spec.Spec, imageName)
+	// }
 }
