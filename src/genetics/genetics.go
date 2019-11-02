@@ -34,7 +34,7 @@ func (d *DNA) findBestSpecimens() {
 	d.specimens = sortSpeciments(d.specimens, true)
 	d.bestSpecs = d.specimens[:d.config.NumOfBest]
 
-	d.specimens = d.specimens[d.config.NumOfBest:]
+	// d.specimens = d.specimens[d.config.NumOfBest:]
 }
 
 func (d *DNA) initFirstGeneration() {
@@ -56,7 +56,24 @@ func (d *DNA) evolve() {
 	fmt.Printf("Num of generations: %d\n", d.config.NumOfIterations)
 
 	for i := uint(0); i < d.config.NumOfIterations; i++ {
+		d.dispatcher()
 
+		d.findBestSpecimens()
+
+		for j := range d.specimens {
+			d.specimens[j] = d.bestSpecs[uint(j)%d.config.NumOfBest]
+		}
+
+		fmt.Printf("Generation: %d\n", i)
 	}
 
+	for i := range d.specimens {
+		fmt.Println(d.specimens[i].Score)
+	}
+
+	for i := range d.bestSpecs {
+		fileName := fmt.Sprintf("img_%d.png", i)
+
+		d.saveImage(d.specimens[i].Spec, fileName)
+	}
 }

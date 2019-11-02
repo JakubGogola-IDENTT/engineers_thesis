@@ -12,6 +12,9 @@ func (s *Specimen) Mutate() {
 		return
 	}
 
+	// s.mu.Lock()
+	// defer s.mu.Unlock()
+
 	// get bounds of random rectangle
 	randomRect := GetRandomRectBounds(s.Spec.Bounds())
 
@@ -45,16 +48,21 @@ func (s *Specimen) Fitness(originalImage image.Image) {
 	s.Score = score
 }
 
+// NextGeneration chooses specimens to next generation
+func (s *Specimen) NextGeneration() {
+
+}
+
 // Cross crosses speciment with antoher image
-func (s *Specimen) Cross(spec Specimen) {
+func (s *Specimen) Cross(spec *Specimen) {
 
-	randomRect := GetRandomRectBounds(s.Spec.Bounds())
+	// randomRect := GetRandomRectBounds(s.Spec.Bounds())
 
-	for x := randomRect.Min.X; x <= randomRect.Max.X; x++ {
-		for y := randomRect.Min.Y; y <= randomRect.Max.Y; y++ {
-			s.Spec.Set(x, y, spec.Spec.At(x, y))
-		}
-	}
+	// for x := randomRect.Min.X; x <= randomRect.Max.X; x++ {
+	// 	for y := randomRect.Min.Y; y <= randomRect.Max.Y; y++ {
+	// 		s.Spec.Set(x, y, spec.Spec.At(x, y))
+	// 	}
+	// }
 
 	// // maximal values of x and y in given Image with border
 	// maxPt := image.Pt(s.Spec.Bounds().Max.X, s.Spec.Bounds().Max.Y)

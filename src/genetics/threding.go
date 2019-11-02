@@ -1,65 +1,27 @@
 package genetics
 
 import (
-	"fmt"
-	"image"
-	"math/rand"
-	"os"
+	"sync"
 )
 
 type specToProcess struct {
-	spec chan Specimen
+	spec chan *Specimen
 }
 
-func (d *DNA) worker(input chan<- specToProcess, output chan<- Specimen) {
-	for {
-		// make and send request for speciment to process
-		request := specToProcess{make(chan Specimen)}
-		input <- request
+func (d *DNA) worker(spec *Specimen, wg *sync.WaitGroup) {
+	defer wg.Done()
 
-		// get spec
-		spec := <-request.spec
-
-		if spec.Spec.Bounds() == image.Rect(0, 0, 0, 0) {
-			continue
-		}
-
-		spec.Mutate()
-		// spec.Fitness(d.originalImage)
-		output <- spec
-	}
+	spec.Mutate()
+	spec.Fitness(d.originalImage)
 }
 
-func (d *DNA) dispatcher(requestChan <-chan specToProcess, responseChan <-chan Specimen) {
-	// counter of generations
-	generation := uint(1)
+func (d *DNA) dispatcher() {
+	var wg sync.WaitGroup
 
-	var processed []Specimen
-
-	for {
-		select {
-		case request := <-requestChan:
-			request.spec <- d.specimens[rand.Intn(len(d.specimens))]
-		case response := <-responseChan:
-			processed = append(processed, response)
-		default:
-		}
-
-		if uint(len(processed)) < 2 {
-			continue
-		}
-
-		fmt.Printf("Len of processed: %d\n", len(processed))
-
-		processed = processed[:0]
-
-		fmt.Printf("Generation: %d\n", generation)
-
-		// exit when all iterations were done
-		if generation == d.config.NumOfIterations {
-			os.Exit(1)
-		}
-
-		generation++
+	for i := range d.specimens {
+		wg.Add(1)
+		go d.worker(&d.specimens[i], &wg)
 	}
+
+	wg.Wait()
 }

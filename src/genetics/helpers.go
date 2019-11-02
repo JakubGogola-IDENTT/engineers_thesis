@@ -10,10 +10,10 @@ import (
 // GetRandomColor returns random color in RGBA (without transparency)
 func GetRandomColor() color.Color {
 	r := uint8(rand.Intn(256))
-	g := uint8(rand.Intn(256))
-	b := uint8(rand.Intn(256))
+	// g := uint8(rand.Intn(256))
+	// b := uint8(rand.Intn(256))
 
-	return color.RGBA{R: r, G: g, B: b, A: 127}
+	return color.RGBA{R: r, G: r, B: r, A: 127}
 }
 
 // CompareColors compares color of two pixels
@@ -46,11 +46,13 @@ func MixColors(c1, c2 color.Color) (c color.RGBA) {
 
 // GetRandomRectBounds returns random bounds of rectangle
 func GetRandomRectBounds(rect image.Rectangle) image.Rectangle {
+	// TODO: experimantaly added half of bounds of recatngle
+
 	// x and y of left upper corner of mutated rectangle
 	minPt := image.Pt(rand.Intn(rect.Max.X), rand.Intn(rect.Max.Y))
 
 	// width and height of mutated rectangle
-	maxPt := image.Pt(minPt.X+rand.Intn(rect.Max.X-minPt.X), minPt.Y+rand.Intn(rect.Max.Y-minPt.Y))
+	maxPt := image.Pt(minPt.X+rand.Intn(rect.Max.X-minPt.X)/3, minPt.Y+rand.Intn(rect.Max.Y-minPt.Y)/3)
 
 	return image.Rectangle{minPt, maxPt}
 }

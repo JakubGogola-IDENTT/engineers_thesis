@@ -29,9 +29,6 @@ type Config struct {
 	// NumOfBest - number of best speciments used to cross
 	NumOfBest uint `json:"NumOfBest"`
 
-	// NumOfThreads - number of threads used to images processing
-	NumOfThreads uint `json:"NumOfThreads"`
-
 	// MutationChance - chance of mutation
 	MutationChance float64 `json:"MutationChance"`
 }
@@ -42,7 +39,6 @@ func (c *Config) parseFlags() {
 	flag.UintVar(&c.NumOfIterations, "generations", 100, "maximal number of generations")
 	flag.UintVar(&c.SizeOfGeneration, "generation-size", 300, "size of generation")
 	flag.UintVar(&c.NumOfBest, "best", 10, "number of best specimens")
-	flag.UintVar(&c.NumOfThreads, "threads", 10, "number of threads")
 	flag.StringVar(&c.SelectionType, "selection", MIXED, "type of selecting speciments to")
 	flag.StringVar(&c.PathToImage, "image-dir", "./mona.jpg", "path to original image")
 	flag.Float64Var(&c.MutationChance, "mutation-chance", 0.2, "chance of mutation")

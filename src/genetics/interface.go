@@ -2,7 +2,6 @@ package genetics
 
 import (
 	"image"
-	"sync"
 	"thesis/config"
 )
 
@@ -10,6 +9,7 @@ import (
 type Genetics interface {
 	Mutate()
 	Fitness(originalImage image.Image)
+	NextGeneration()
 	Cross(spec image.RGBA)
 }
 
@@ -17,6 +17,7 @@ type Genetics interface {
 type Specimen struct {
 	Spec  image.RGBA
 	Score float64
+	// mu    sync.Mutex
 }
 
 // DNA contains config, speciments set and root image for algorithm
@@ -26,5 +27,4 @@ type DNA struct {
 	bestSpecs     []Specimen
 	crossed       []Specimen
 	config        config.Config
-	mu            sync.Mutex
 }
