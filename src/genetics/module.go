@@ -12,9 +12,6 @@ func (s *Specimen) Mutate() {
 		return
 	}
 
-	// s.mu.Lock()
-	// defer s.mu.Unlock()
-
 	// get bounds of random rectangle
 	randomRect := GetRandomRectBounds(s.Spec.Bounds())
 
