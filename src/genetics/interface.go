@@ -17,7 +17,6 @@ type Genetics interface {
 type Specimen struct {
 	Spec  image.RGBA
 	Score float64
-	// mu    sync.Mutex
 }
 
 // DNA contains config, speciments set and root image for algorithm

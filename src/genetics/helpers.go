@@ -18,13 +18,16 @@ func GetRandomColor() color.Color {
 
 // CompareColors compares color of two pixels
 func CompareColors(c1, c2 color.Color) (diff float64) {
-	r1, g1, b1, a1 := c1.RGBA()
-	r2, g2, b2, a2 := c2.RGBA()
+	// r1, g1, b1, a1 := c1.RGBA()
+	// r2, g2, b2, a2 := c2.RGBA()
+
+	r1, _, _, _ := c1.RGBA()
+	r2, _, _, _ := c2.RGBA()
 
 	diff += math.Abs(float64(r1 - r2))
-	diff += math.Abs(float64(g1 - g2))
-	diff += math.Abs(float64(b1 - b2))
-	diff += math.Abs(float64(a1 - a2))
+	// diff += math.Abs(float64(g1 - g2))
+	// diff += math.Abs(float64(b1 - b2))
+	// diff += math.Abs(float64(a1 - a2))
 
 	return diff
 }

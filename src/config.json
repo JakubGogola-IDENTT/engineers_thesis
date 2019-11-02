@@ -1,7 +1,7 @@
 {
     "NumOfIterations": 1000,
-    "SizeOfGeneration": 200,
+    "SizeOfGeneration": 300,
     "PathToImage": "./mona_bw.jpg",
     "NumOfBest": 2,
-    "MutationChance": 0.2
+    "MutationChance": 1.0
 }
