@@ -3,14 +3,13 @@ package genetics
 import (
 	"image"
 	"math"
-	"math/rand"
 )
 
 // Mutate mutates random rectangle in speciment image
 func (s *Specimen) Mutate() {
-	if rand.Float32() > 0.3 {
-		return
-	}
+	// if rand.Float32() > 0.3 {
+	// 	return
+	// }
 
 	// get bounds of random rectangle
 	randomRect := GetRandomRectBounds(s.Spec.Bounds())
@@ -20,7 +19,6 @@ func (s *Specimen) Mutate() {
 
 	for x := randomRect.Min.X; x <= randomRect.Max.X; x++ {
 		for y := randomRect.Min.Y; y <= randomRect.Max.Y; y++ {
-
 			s.Spec.Set(x, y, MixColors(randomColor, s.Spec.At(x, y)))
 		}
 	}

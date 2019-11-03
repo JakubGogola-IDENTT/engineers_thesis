@@ -39,12 +39,10 @@ func (d *DNA) saveImage(imageToSave image.RGBA, imgName string) {
 	}
 
 	defer file.Close()
-
 	png.Encode(file, &imageToSave)
 }
 
 func readImage(pathToImage string) image.Image {
-	// TODO: should be configurable by user
 	// Register image format
 	image.RegisterFormat("jpg", "jpg", jpeg.Decode, jpeg.DecodeConfig)
 
