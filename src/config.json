@@ -1,5 +1,5 @@
 {
-    "NumOfIterations": 1000,
+    "NumOfIterations": 100,
     "SizeOfGeneration": 300,
     "PathToImage": "./mona_bw.jpg",
     "NumOfBest": 2,

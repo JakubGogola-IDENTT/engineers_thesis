@@ -55,13 +55,15 @@ func (d *DNA) evolve() {
 	fmt.Printf("Num of generations: %d\n", d.config.NumOfIterations)
 
 	for i := uint(0); i < d.config.NumOfIterations; i++ {
-		d.dispatcher()
+		d.dispatcher(false)
 
 		d.findBestSpecimens()
 
-		for j := range d.specimens {
-			d.specimens[j] = d.copySpecimen(d.bestSpecs[uint(j)%d.config.NumOfBest])
-		}
+		// for j := range d.specimens {
+		// 	d.specimens[j] = d.copySpecimen(d.bestSpecs[uint(j)%d.config.NumOfBest])
+		// }
+
+		d.dispatcher(true)
 
 		fmt.Printf("Generation: %d\n", i)
 	}
