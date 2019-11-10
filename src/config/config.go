@@ -31,6 +31,9 @@ type Config struct {
 
 	// MutationChance - chance of mutation
 	MutationChance float64 `json:"MutationChance"`
+
+	// ColorScale - colors scale
+	ColorScale string `json:"ColorScale"`
 }
 
 // parseFlags - parses arguments passed to program in console
@@ -41,13 +44,14 @@ func (c *Config) parseFlags() {
 	flag.UintVar(&c.NumOfBest, "best", 10, "number of best specimens")
 	flag.StringVar(&c.SelectionType, "selection", MIXED, "type of selecting speciments to")
 	flag.StringVar(&c.PathToImage, "image-dir", "./mona.jpg", "path to original image")
+	flag.StringVar(&c.ColorScale, "color-scale", RGBA, "color scale")
 	flag.Float64Var(&c.MutationChance, "mutation-chance", 0.2, "chance of mutation")
 }
 
 // Init - initializes config
-func (c *Config) Init(fromFile bool) { // TODO: add reading from file guard
+func (c *Config) Init(fromFile bool) {
 	if fromFile {
-		fmt.Println("Read config from file")
+		fmt.Println("Read config from file...")
 	}
 
 	c.parseFlags()

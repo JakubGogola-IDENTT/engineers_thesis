@@ -1,7 +1,7 @@
 {
-    "NumOfIterations": 100,
+    "NumOfIterations": 1000,
     "SizeOfGeneration": 300,
-    "PathToImage": "./mona_bw.jpg",
+    "PathToImage": "./maciek.jpg",
     "NumOfBest": 2,
     "MutationChance": 1.0
 }

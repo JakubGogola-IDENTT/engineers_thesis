@@ -59,10 +59,6 @@ func (d *DNA) evolve() {
 
 		d.findBestSpecimens()
 
-		// for j := range d.specimens {
-		// 	d.specimens[j] = d.copySpecimen(d.bestSpecs[uint(j)%d.config.NumOfBest])
-		// }
-
 		d.dispatcher(true)
 
 		fmt.Printf("Generation: %d\n", i)
@@ -75,20 +71,4 @@ func (d *DNA) evolve() {
 
 		d.saveImage(imageToSave, fileName)
 	}
-}
-
-func (d *DNA) copySpecimen(s Specimen) (spec Specimen) {
-	img := *image.NewRGBA(d.originalImage.Bounds())
-
-	maxRect := d.originalImage.Bounds().Max
-
-	for x := 0; x <= maxRect.X; x++ {
-		for y := 0; y <= maxRect.Y; y++ {
-			img.Set(x, y, s.Spec.At(x, y))
-		}
-	}
-
-	spec.Spec = img
-
-	return spec
 }

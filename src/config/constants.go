@@ -13,3 +13,9 @@ const (
 	STRONGEST string = "strongest"
 	MIXED     string = "mixed"
 )
+
+// Type of color scales
+const (
+	GRAY string = "gray"
+	RGBA string = "rgba"
+)
