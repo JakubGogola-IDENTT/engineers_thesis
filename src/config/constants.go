@@ -19,3 +19,9 @@ const (
 	GRAY string = "gray"
 	RGBA string = "rgba"
 )
+
+// Type of shape used to approximation
+const (
+	TRIANGLE  string = "triangle"
+	RECTANGLE string = "rectangle"
+)

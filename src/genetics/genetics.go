@@ -48,6 +48,7 @@ func (d *DNA) initFirstGeneration() {
 		draw.Draw(img, img.Bounds(), &image.Uniform{c}, image.ZP, draw.Src)
 
 		d.specimens[i].Spec = *img
+		d.specimens[i].config = d.config
 	}
 }
 

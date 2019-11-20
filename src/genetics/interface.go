@@ -15,8 +15,9 @@ type Genetics interface {
 
 // Specimen represents set of specimens (images) in single iteration (= generation)
 type Specimen struct {
-	Spec  image.RGBA
-	Score float64
+	Spec   image.RGBA
+	Score  float64
+	config config.Config
 }
 
 // DNA contains config, speciments set and root image for algorithm
