@@ -1,6 +1,6 @@
 {
-    "NumOfIterations": 100,
-    "SizeOfGeneration": 300,
+    "NumOfIterations": 1000,
+    "SizeOfGeneration": 50,
     "PathToImage": "./mona.jpg",
     "NumOfBest": 2,
     "MutationChance": 1.0,

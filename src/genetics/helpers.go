@@ -60,13 +60,7 @@ func GetRandomRectBounds(rect image.Rectangle) image.Rectangle {
 func CopySpecimen(spec *Specimen, specToCopy Specimen) {
 	img := *image.NewRGBA(spec.Spec.Bounds())
 
-	maxRect := spec.Spec.Bounds().Max
-
-	for x := 0; x <= maxRect.X; x++ {
-		for y := 0; y <= maxRect.Y; y++ {
-			img.Set(x, y, specToCopy.Spec.At(x, y))
-		}
-	}
+	copy(img.Pix, specToCopy.Spec.Pix)
 
 	spec.Spec = img
 }
