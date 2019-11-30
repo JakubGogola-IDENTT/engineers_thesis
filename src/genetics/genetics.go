@@ -5,6 +5,7 @@ import (
 	"image"
 	"image/color"
 	"image/draw"
+	"math/rand"
 	"thesis/config"
 )
 
@@ -27,13 +28,24 @@ func (d *DNA) init() {
 	// init specimens in first generation
 	d.initFirstGeneration()
 
+	d.randomlySelected = make([]int, d.config.SizeOfGeneration)
+
 	d.evolve()
 }
 
-func (d *DNA) findBestSpecimens() {
+func (d *DNA) chooseBestSpecimens() {
 	d.specimens = sortSpeciments(d.specimens, true)
-	d.bestSpecs = make([]Specimen, d.config.NumOfBest)
-	copy(d.bestSpecs, d.specimens[:d.config.NumOfBest])
+	d.nextGenerationSpecs = make([]Specimen, d.config.NumOfBest)
+	copy(d.nextGenerationSpecs, d.specimens[:d.config.NumOfBest])
+}
+
+func (d *DNA) chooseRandomSpecimens() {
+	copy(d.nextGenerationSpecs, d.specimens)
+
+	for i := uint(0); i < d.config.SizeOfGeneration; i++ {
+		d.randomlySelected[i] = rand.Intn(int(d.config.SizeOfGeneration))
+	}
+
 }
 
 func (d *DNA) initFirstGeneration() {
@@ -56,16 +68,20 @@ func (d *DNA) evolve() {
 	fmt.Printf("Num of generations: %d\n", d.config.NumOfIterations)
 
 	for i := uint(0); i < d.config.NumOfIterations; i++ {
-		d.dispatcher(false)
+		d.dispatcher(COPY)
 
-		d.findBestSpecimens()
+		if d.config.SelectionType == config.STRONGEST {
+			d.chooseBestSpecimens()
+		} else {
+			d.chooseRandomSpecimens()
+		}
 
-		d.dispatcher(true)
+		d.dispatcher(EVOLVE)
 
 		fmt.Printf("Generation: %d\n", i)
 	}
 
-	for i := range d.bestSpecs {
+	for i := uint(0); i < d.config.NumOfBest; i++ {
 		fileName := fmt.Sprintf("img_%d_best.png", i)
 
 		imageToSave := d.specimens[i].Spec

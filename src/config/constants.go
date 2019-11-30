@@ -3,7 +3,6 @@ package config
 // Types of genetic operators
 const (
 	CROSSING string = "crossing"
-	OX       string = "OX"
 	MUTATION string = "mutation"
 )
 
@@ -11,17 +10,4 @@ const (
 const (
 	RANDOM    string = "random"
 	STRONGEST string = "strongest"
-	MIXED     string = "mixed"
-)
-
-// Type of color scales
-const (
-	GRAY string = "gray"
-	RGBA string = "rgba"
-)
-
-// Type of shape used to approximation
-const (
-	TRIANGLE  string = "triangle"
-	RECTANGLE string = "rectangle"
 )

@@ -21,9 +21,10 @@ type Specimen struct {
 
 // DNA contains config, speciments set and root image for algorithm
 type DNA struct {
-	originalImage image.Image
-	specimens     []Specimen
-	bestSpecs     []Specimen
-	crossed       []Specimen
-	config        config.Config
+	originalImage       image.Image
+	specimens           []Specimen
+	nextGenerationSpecs []Specimen
+	randomlySelected    []int
+	crossed             []Specimen
+	config              config.Config
 }

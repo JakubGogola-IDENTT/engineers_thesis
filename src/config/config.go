@@ -34,9 +34,6 @@ type Config struct {
 
 	// GrayScale - colors scale
 	GrayScale bool `json:"GrayScale"`
-
-	// Shape - shape used to images approximation
-	Shape string `json:"Shape"`
 }
 
 // parseFlags - parses arguments passed to program in console
@@ -45,10 +42,9 @@ func (c *Config) parseFlags() {
 	flag.UintVar(&c.NumOfIterations, "generations", 100, "maximal number of generations")
 	flag.UintVar(&c.SizeOfGeneration, "generation-size", 300, "size of generation")
 	flag.UintVar(&c.NumOfBest, "best", 10, "number of best specimens")
-	flag.StringVar(&c.SelectionType, "selection", MIXED, "type of selecting speciments to")
+	flag.StringVar(&c.SelectionType, "selection", STRONGEST, "type of selecting speciments to")
 	flag.StringVar(&c.PathToImage, "image-dir", "./mona.jpg", "path to original image")
 	flag.BoolVar(&c.GrayScale, "gray-scale", false, "defines if images should be represented in gray scale")
-	flag.StringVar(&c.Shape, "shape", RECTANGLE, "shape used to approximation")
 	flag.Float64Var(&c.MutationChance, "mutation-chance", 0.2, "chance of mutation")
 }
 
