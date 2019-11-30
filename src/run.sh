@@ -1,5 +1,5 @@
 #!/bin/bash
 
-rm -f *.png
+rm -f *_best.png
 
 go run main.go -from-file ./config.json
