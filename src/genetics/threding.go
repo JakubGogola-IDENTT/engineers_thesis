@@ -2,7 +2,6 @@ package genetics
 
 import (
 	"sync"
-	"thesis/config"
 )
 
 type specToProcess struct {
@@ -36,19 +35,11 @@ func (d *DNA) dispatchCopyWorkers() {
 func (d *DNA) dispatchEvolveWorkers() {
 	var wg sync.WaitGroup
 
-	if d.config.SelectionType == config.RANDOM {
-		d.nextGenerationSpecs = make([]Specimen, d.config.SizeOfGeneration)
-	}
-
 	for i := uint(0); i < d.config.SizeOfGeneration; i++ {
 		wg.Add(1)
 
-		if d.config.SelectionType == config.STRONGEST {
-			go d.copyWorker(&d.specimens[i], d.nextGenerationSpecs[uint(i)%d.config.NumOfBest], &wg)
-			continue
-		}
-
-		go d.copyWorker(&d.nextGenerationSpecs[i], d.specimens[d.randomlySelected[i]], &wg)
+		go d.copyWorker(&d.specimens[i], d.nextGenerationSpecs[uint(i)%d.config.NumOfBest], &wg)
+		continue
 	}
 
 	wg.Wait()

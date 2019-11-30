@@ -5,5 +5,5 @@
     "NumOfBest": 2,
     "MutationChance": 1.0,
     "GrayScale": true,
-    "SelectionType": "random"
+    "SelectionType": "strongest"
 }

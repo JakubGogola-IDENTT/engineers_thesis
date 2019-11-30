@@ -5,7 +5,6 @@ import (
 	"image"
 	"image/color"
 	"image/draw"
-	"math/rand"
 	"thesis/config"
 )
 
@@ -39,15 +38,6 @@ func (d *DNA) chooseBestSpecimens() {
 	copy(d.nextGenerationSpecs, d.specimens[:d.config.NumOfBest])
 }
 
-func (d *DNA) chooseRandomSpecimens() {
-	copy(d.nextGenerationSpecs, d.specimens)
-
-	for i := uint(0); i < d.config.SizeOfGeneration; i++ {
-		d.randomlySelected[i] = rand.Intn(int(d.config.SizeOfGeneration))
-	}
-
-}
-
 func (d *DNA) initFirstGeneration() {
 	// size of every specimen
 	minRect := d.originalImage.Bounds().Min
@@ -70,11 +60,7 @@ func (d *DNA) evolve() {
 	for i := uint(0); i < d.config.NumOfIterations; i++ {
 		d.dispatcher(COPY)
 
-		if d.config.SelectionType == config.STRONGEST {
-			d.chooseBestSpecimens()
-		} else {
-			d.chooseRandomSpecimens()
-		}
+		d.chooseBestSpecimens()
 
 		d.dispatcher(EVOLVE)
 
