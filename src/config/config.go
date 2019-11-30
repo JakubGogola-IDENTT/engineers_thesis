@@ -32,8 +32,8 @@ type Config struct {
 	// MutationChance - chance of mutation
 	MutationChance float64 `json:"MutationChance"`
 
-	// ColorScale - colors scale
-	ColorScale string `json:"ColorScale"`
+	// GrayScale - colors scale
+	GrayScale bool `json:"GrayScale"`
 
 	// Shape - shape used to images approximation
 	Shape string `json:"Shape"`
@@ -47,7 +47,7 @@ func (c *Config) parseFlags() {
 	flag.UintVar(&c.NumOfBest, "best", 10, "number of best specimens")
 	flag.StringVar(&c.SelectionType, "selection", MIXED, "type of selecting speciments to")
 	flag.StringVar(&c.PathToImage, "image-dir", "./mona.jpg", "path to original image")
-	flag.StringVar(&c.ColorScale, "color-scale", RGBA, "color scale")
+	flag.BoolVar(&c.GrayScale, "gray-scale", false, "defines if images should be represented in gray scale")
 	flag.StringVar(&c.Shape, "shape", RECTANGLE, "shape used to approximation")
 	flag.Float64Var(&c.MutationChance, "mutation-chance", 0.2, "chance of mutation")
 }

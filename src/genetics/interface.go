@@ -9,7 +9,6 @@ import (
 type Genetics interface {
 	Mutate()
 	Fitness(originalImage image.Image)
-	NextGeneration()
 	Cross(spec image.RGBA)
 }
 

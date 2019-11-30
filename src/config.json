@@ -1,8 +1,9 @@
 {
-    "NumOfIterations": 1000,
+    "NumOfIterations": 100,
     "SizeOfGeneration": 50,
     "PathToImage": "./mona.jpg",
     "NumOfBest": 2,
     "MutationChance": 1.0,
-    "Shape": "rectangle"
+    "Shape": "rectangle",
+    "GrayScale": true
 }

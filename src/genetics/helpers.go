@@ -8,7 +8,13 @@ import (
 )
 
 // GetRandomColor returns random color in RGBA (without transparency)
-func GetRandomColor() color.Color {
+func GetRandomColor(isGrayScale bool) color.Color {
+	if isGrayScale {
+		c := uint8(rand.Intn(256))
+
+		return color.RGBA{R: c, G: c, B: c, A: 0}
+	}
+
 	r := uint8(rand.Intn(256))
 	g := uint8(rand.Intn(256))
 	b := uint8(rand.Intn(256))
@@ -17,9 +23,13 @@ func GetRandomColor() color.Color {
 }
 
 // CompareColors compares color of two pixels
-func CompareColors(c1, c2 color.Color) (diff float64) {
+func CompareColors(c1, c2 color.Color, isGrayScale bool) (diff float64) {
 	r1, g1, b1, a1 := c1.RGBA()
 	r2, g2, b2, a2 := c2.RGBA()
+
+	if isGrayScale {
+		return math.Abs(float64(r1 - r2))
+	}
 
 	diff += math.Abs(float64(r1 - r2))
 	diff += math.Abs(float64(g1 - g2))

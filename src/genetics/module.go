@@ -2,6 +2,7 @@ package genetics
 
 import (
 	"image"
+	"image/color"
 	"math"
 	"math/rand"
 )
@@ -16,7 +17,13 @@ func (s *Specimen) Mutate() {
 	randomRect := GetRandomRectBounds(s.Spec.Bounds())
 
 	// get random color for rectangle
-	randomColor := GetRandomColor()
+	var randomColor color.Color
+
+	if s.config.GrayScale {
+		randomColor = GetRandomColor(true)
+	} else {
+		randomColor = GetRandomColor(false)
+	}
 
 	for x := randomRect.Min.X; x <= randomRect.Max.X; x++ {
 		for y := randomRect.Min.Y; y <= randomRect.Max.Y; y++ {
@@ -35,35 +42,27 @@ func (s *Specimen) Fitness(originalImage image.Image) {
 	// Iterate over all pixels of speciment
 	for x := 0; x < bounds.X; x++ {
 		for y := 0; y < bounds.Y; y++ {
-			score += math.Pow(CompareColors(s.Spec.At(x, y), originalImage.At(x, y)), 2.0)
+			score += math.Pow(CompareColors(s.Spec.At(x, y), originalImage.At(x, y), s.config.GrayScale), 2.0)
 		}
 	}
 
 	s.Score = score
 }
 
-// NextGeneration chooses specimens to next generation
-func (s *Specimen) NextGeneration() {
-
-}
-
 // Cross crosses speciment with antoher image
 func (s *Specimen) Cross(spec *Specimen) {
-
+	// // get random part of first image
 	// randomRect := GetRandomRectBounds(s.Spec.Bounds())
 
-	// for x := randomRect.Min.X; x <= randomRect.Max.X; x++ {
-	// 	for y := randomRect.Min.Y; y <= randomRect.Max.Y; y++ {
-	// 		s.Spec.Set(x, y, spec.Spec.At(x, y))
-	// 	}
+	// minPixOffset := s.Spec.PixOffset(randomRect.Min.X, randomRect.Min.Y)
+	// maxPixOffset := s.Spec.PixOffset(randomRect.Max.X, randomRect.Max.Y)
+
+	// // copy pixels of random area chosen above
+	// tmp := s.Spec.Pix[minPixOffset:maxPixOffset]
+
+	// // TODO: ugly and slow solution but, probaby, works
+	// for pix := range tmp {
+	// 	spec.P
 	// }
 
-	// // maximal values of x and y in given Image with border
-	// maxPt := image.Pt(s.Spec.Bounds().Max.X, s.Spec.Bounds().Max.Y)
-
-	// for x := 0; x < maxPt.X; x++ {
-	// 	for y := 0; y < maxPt.Y; y++ {
-	// 		s.Spec.Set(x, y, MixColors(s.Spec.At(x, y), spec.Spec.At(x, y)))
-	// 	}
-	// }
 }
