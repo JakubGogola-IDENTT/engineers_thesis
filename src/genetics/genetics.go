@@ -69,6 +69,10 @@ func (d *DNA) evolve() {
 
 		d.dispatcher(EVOLVE)
 
+		if d.config.WithCrossing {
+			d.dispatcher(CROSS)
+		}
+
 		fmt.Printf("Generation: %d\n", i)
 	}
 

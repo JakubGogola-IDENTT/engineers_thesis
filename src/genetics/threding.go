@@ -20,7 +20,12 @@ func (d *DNA) copyWorker(spec *Specimen, specToCopy Specimen, wg *sync.WaitGroup
 	CopySpecimen(spec, specToCopy)
 }
 
-func (d *DNA) dispatchCopyWorkers() {
+func (d *DNA) crossWorker(spec1, spec2 *Specimen, wg *sync.WaitGroup) {
+	defer wg.Done()
+	CrossSpecimens(spec1, spec2)
+}
+
+func (d *DNA) dispatchEvolveWorkers() {
 	var wg sync.WaitGroup
 
 	for i := range d.specimens {
@@ -32,7 +37,7 @@ func (d *DNA) dispatchCopyWorkers() {
 	wg.Wait()
 }
 
-func (d *DNA) dispatchEvolveWorkers() {
+func (d *DNA) dispatchCopyWorkers() {
 	var wg sync.WaitGroup
 
 	for i := uint(0); i < d.config.SizeOfGeneration; i++ {
@@ -45,10 +50,25 @@ func (d *DNA) dispatchEvolveWorkers() {
 	wg.Wait()
 }
 
+func (d *DNA) dispatchCrossingWorkers() {
+	var wg sync.WaitGroup
+
+	for i := uint(0); i < d.config.SizeOfGeneration; i += 2 {
+		wg.Add(1)
+
+		go d.crossWorker(&d.specimens[i], &d.specimens[i+1], &wg)
+	}
+
+	wg.Wait()
+}
+
 func (d *DNA) dispatcher(workerType string) {
-	if workerType == EVOLVE {
-		d.dispatchEvolveWorkers()
-	} else {
+	switch workerType {
+	case EVOLVE:
 		d.dispatchCopyWorkers()
+	case CROSS:
+		d.dispatchCrossingWorkers()
+	default:
+		d.dispatchEvolveWorkers()
 	}
 }

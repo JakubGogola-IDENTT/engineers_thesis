@@ -4,4 +4,5 @@ package genetics
 const (
 	COPY   string = "copy"
 	EVOLVE string = "evolve"
+	CROSS  string = "cross"
 )
