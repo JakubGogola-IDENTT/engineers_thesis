@@ -38,6 +38,11 @@ func (d *DNA) chooseBestSpecimens() {
 	copy(d.nextGenerationSpecs, d.specimens[:d.config.NumOfBest])
 }
 
+func (d *DNA) findMixedSpecimens() {
+	d.specimens = sortSpeciments(d.specimens, true)
+
+}
+
 func (d *DNA) initFirstGeneration() {
 	// size of every specimen
 	minRect := d.originalImage.Bounds().Min
