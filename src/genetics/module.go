@@ -51,18 +51,17 @@ func (s *Specimen) Fitness(originalImage image.Image) {
 
 // Cross crosses speciment with antoher image
 func (s *Specimen) Cross(spec *Specimen) {
-	// // get random part of first image
-	// randomRect := GetRandomRectBounds(s.Spec.Bounds())
+	rect := GetRandomRectBounds(s.Spec.Bounds())
 
-	// minPixOffset := s.Spec.PixOffset(randomRect.Min.X, randomRect.Min.Y)
-	// maxPixOffset := s.Spec.PixOffset(randomRect.Max.X, randomRect.Max.Y)
+	minPt := rect.Bounds().Min
+	maxPt := rect.Bounds().Max
 
-	// // copy pixels of random area chosen above
-	// tmp := s.Spec.Pix[minPixOffset:maxPixOffset]
-
-	// // TODO: ugly and slow solution but, probaby, works
-	// for pix := range tmp {
-	// 	spec.P
-	// }
+	for x := minPt.X; x < maxPt.X; x++ {
+		for y := minPt.Y; y < maxPt.Y; y++ {
+			tmp := s.Spec.At(x, y)
+			s.Spec.Set(x, y, spec.Spec.At(x, y))
+			spec.Spec.Set(x, y, tmp)
+		}
+	}
 
 }

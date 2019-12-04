@@ -74,19 +74,3 @@ func CopySpecimen(spec *Specimen, specToCopy Specimen) {
 
 	spec.Spec = img
 }
-
-// CrossSpecimens - crosses two specimens
-func CrossSpecimens(spec1, spec2 *Specimen) {
-	rect := GetRandomRectBounds(spec1.Spec.Bounds())
-
-	minPt := rect.Bounds().Min
-	maxPt := rect.Bounds().Max
-
-	for x := minPt.X; x < maxPt.X; x++ {
-		for y := minPt.Y; y < maxPt.Y; y++ {
-			tmp := spec1.Spec.At(x, y)
-			spec1.Spec.Set(x, y, spec2.Spec.At(x, y))
-			spec2.Spec.Set(x, y, tmp)
-		}
-	}
-}

@@ -22,7 +22,7 @@ func (d *DNA) copyWorker(spec *Specimen, specToCopy Specimen, wg *sync.WaitGroup
 
 func (d *DNA) crossWorker(spec1, spec2 *Specimen, wg *sync.WaitGroup) {
 	defer wg.Done()
-	CrossSpecimens(spec1, spec2)
+	spec1.Cross(spec2)
 }
 
 func (d *DNA) dispatchEvolveWorkers() {
