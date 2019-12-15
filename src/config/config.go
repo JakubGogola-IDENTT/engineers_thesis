@@ -17,9 +17,6 @@ type Config struct {
 	// SizeOfGenerations - number of speciments in generations
 	SizeOfGeneration uint `json:"SizeOfGeneration"`
 
-	// SelectionType - type of selecting speciments to mutation
-	SelectionType string `json:"SelectionType"`
-
 	// FromConfig - if set, config should be read from file
 	FromFile string
 
@@ -45,7 +42,6 @@ func (c *Config) parseFlags() {
 	flag.UintVar(&c.NumOfIterations, "generations", 100, "maximal number of generations")
 	flag.UintVar(&c.SizeOfGeneration, "generation-size", 300, "size of generation")
 	flag.UintVar(&c.NumOfBest, "best", 10, "number of best specimens")
-	flag.StringVar(&c.SelectionType, "selection", STRONGEST, "type of selecting speciments to")
 	flag.StringVar(&c.PathToImage, "image-dir", "./mona.jpg", "path to original image")
 	flag.BoolVar(&c.GrayScale, "gray-scale", false, "defines if images should be represented in gray scale")
 	flag.BoolVar(&c.WithCrossing, "with-crossing", false, "specifies if crossing operator should be used")

@@ -40,7 +40,6 @@ func (d *DNA) chooseBestSpecimens() {
 
 func (d *DNA) findMixedSpecimens() {
 	d.specimens = sortSpeciments(d.specimens, true)
-
 }
 
 func (d *DNA) initFirstGeneration() {
