@@ -58,6 +58,16 @@ func (d *DNA) initFirstGeneration() {
 	}
 }
 
+func (d *DNA) saveImages(iteration uint) {
+	for i := uint(0); i < d.config.NumOfBest; i++ {
+		fileName := fmt.Sprintf("img_%d_it_%d_best.png", i, iteration)
+
+		imageToSave := d.specimens[i].Spec
+
+		d.saveImage(imageToSave, fileName)
+	}
+}
+
 func (d *DNA) evolve() {
 	fmt.Printf("Num of generations: %d\n", d.config.NumOfIterations)
 
@@ -73,13 +83,13 @@ func (d *DNA) evolve() {
 		}
 
 		fmt.Printf("Generation: %d\n", i)
+
+		switch i {
+		case 10, 50, 100, 500, 1000, 5000, 10000:
+			d.saveImages(i)
+		}
+
 	}
 
-	for i := uint(0); i < d.config.NumOfBest; i++ {
-		fileName := fmt.Sprintf("img_%d_best.png", i)
-
-		imageToSave := d.specimens[i].Spec
-
-		d.saveImage(imageToSave, fileName)
-	}
+	d.saveImages(d.config.NumOfIterations)
 }

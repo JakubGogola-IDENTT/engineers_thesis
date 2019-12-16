@@ -39,8 +39,8 @@ type Config struct {
 // parseFlags - parses arguments passed to program in console
 func (c *Config) parseFlags() {
 	flag.StringVar(&c.FromFile, "from-file", "", "read config from given file")
-	flag.UintVar(&c.NumOfIterations, "generations", 100, "maximal number of generations")
-	flag.UintVar(&c.SizeOfGeneration, "generation-size", 300, "size of generation")
+	flag.UintVar(&c.NumOfIterations, "generations", 1000, "maximal number of generations")
+	flag.UintVar(&c.SizeOfGeneration, "generation-size", 200, "size of generation")
 	flag.UintVar(&c.NumOfBest, "best", 10, "number of best specimens")
 	flag.StringVar(&c.PathToImage, "image-dir", "./mona.jpg", "path to original image")
 	flag.BoolVar(&c.GrayScale, "gray-scale", false, "defines if images should be represented in gray scale")
