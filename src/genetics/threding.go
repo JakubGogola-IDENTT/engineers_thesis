@@ -65,10 +65,10 @@ func (d *DNA) dispatchCrossingWorkers() {
 func (d *DNA) dispatcher(workerType string) {
 	switch workerType {
 	case EVOLVE:
-		d.dispatchCopyWorkers()
+		d.dispatchEvolveWorkers()
 	case CROSS:
 		d.dispatchCrossingWorkers()
 	default:
-		d.dispatchEvolveWorkers()
+		d.dispatchCopyWorkers()
 	}
 }

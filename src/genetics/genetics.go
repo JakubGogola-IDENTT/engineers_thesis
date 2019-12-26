@@ -72,11 +72,11 @@ func (d *DNA) evolve() {
 	fmt.Printf("Num of generations: %d\n", d.config.NumOfIterations)
 
 	for i := uint(0); i < d.config.NumOfIterations; i++ {
-		d.dispatcher(COPY)
+		d.dispatcher(EVOLVE)
 
 		d.chooseBestSpecimens()
 
-		d.dispatcher(EVOLVE)
+		d.dispatcher(COPY)
 
 		if d.config.WithCrossing {
 			d.dispatcher(CROSS)
