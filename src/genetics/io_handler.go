@@ -12,6 +12,7 @@ func (d *DNA) readImage(pathToImage string) {
 	// TODO: should be configurable by user
 	// Register image format
 	image.RegisterFormat("jpg", "jpg", jpeg.Decode, jpeg.DecodeConfig)
+	image.RegisterFormat("png", "png", png.Decode, png.DecodeConfig)
 
 	file, err := os.Open(pathToImage)
 
