@@ -49,7 +49,6 @@ func MixColors(c1, c2 color.Color) (c color.RGBA) {
 	c.G = uint8(g1+g2) >> 1
 	c.B = uint8(b1+b2) >> 1
 
-	// c.A = uint8(a1+a2) >> 1
 	c.A = 255
 
 	return c

@@ -1,5 +1,5 @@
 {
-    "NumOfIterations": 200,
+    "NumOfIterations": 10000,
     "SizeOfGeneration": 200,
     "PathToImage": "./maciek.jpg",
     "NumOfBest": 2,
