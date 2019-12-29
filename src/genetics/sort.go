@@ -1,7 +1,6 @@
 package genetics
 
 import (
-	"fmt"
 	"sort"
 )
 
@@ -33,14 +32,5 @@ func sortSpeciments(specimens []Specimen, reverse bool) []Specimen {
 		sort.Sort(sort.Reverse(byScore(specimens)))
 	}
 
-	// printSpecimens(specimens)
-
 	return specimens
-}
-
-func printSpecimens(specs []Specimen) {
-	fmt.Println("*************")
-	for _, spec := range specs {
-		fmt.Println(spec.Score)
-	}
 }

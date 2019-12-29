@@ -3,7 +3,6 @@ package genetics
 import (
 	"image"
 	"image/color"
-	"math"
 	"math/rand"
 )
 
@@ -42,7 +41,7 @@ func (s *Specimen) Fitness(originalImage image.Image) {
 	// Iterate over all pixels of speciment
 	for x := 0; x < bounds.X; x++ {
 		for y := 0; y < bounds.Y; y++ {
-			score += math.Pow(CompareColors(s.Spec.At(x, y), originalImage.At(x, y), s.config.GrayScale), 2.0)
+			score += CompareColors(s.Spec.At(x, y), originalImage.At(x, y), s.config.GrayScale)
 		}
 	}
 

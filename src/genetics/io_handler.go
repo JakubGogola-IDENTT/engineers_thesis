@@ -9,9 +9,9 @@ import (
 )
 
 func (d *DNA) readImage(pathToImage string) {
-	// TODO: should be configurable by user
 	// Register image format
 	image.RegisterFormat("jpg", "jpg", jpeg.Decode, jpeg.DecodeConfig)
+	image.RegisterFormat("png", "png", png.Decode, png.DecodeConfig)
 
 	file, err := os.Open(pathToImage)
 
@@ -45,6 +45,7 @@ func (d *DNA) saveImage(imageToSave image.RGBA, imgName string) {
 func readImage(pathToImage string) image.Image {
 	// Register image format
 	image.RegisterFormat("jpg", "jpg", jpeg.Decode, jpeg.DecodeConfig)
+	image.RegisterFormat("png", "png", png.Decode, png.DecodeConfig)
 
 	file, err := os.Open(pathToImage)
 
