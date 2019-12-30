@@ -27,8 +27,6 @@ func (d *DNA) init() {
 	// init specimens in first generation
 	d.initFirstGeneration()
 
-	d.randomlySelected = make([]int, d.config.SizeOfGeneration)
-
 	d.evolve()
 }
 

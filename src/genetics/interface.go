@@ -24,7 +24,6 @@ type DNA struct {
 	originalImage       image.Image
 	specimens           []Specimen
 	nextGenerationSpecs []Specimen
-	randomlySelected    []int
 	crossed             []Specimen
 	config              config.Config
 }
