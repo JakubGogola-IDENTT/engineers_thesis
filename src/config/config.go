@@ -63,6 +63,7 @@ func (c *Config) Init(fromFile bool) {
 	}
 }
 
+// readFromFile - reads config from JSON file
 func (c *Config) readFromFile() {
 	jsonFile, err := os.Open(c.FromFile)
 
