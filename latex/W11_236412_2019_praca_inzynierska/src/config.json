@@ -1,9 +1,0 @@
-{
-    "NumOfIterations": 10000,
-    "SizeOfGeneration": 200,
-    "PathToImage": "./mona.jpg",
-    "NumOfBest": 2,
-    "MutationChance": 0.8,
-    "GrayScale": true,
-    "WithCrossing": true
-}
