@@ -1,0 +1,27 @@
+\chapter{Podsumowanie}
+\thispagestyle{chapterBeginStyle}
+\label{podsumowanie}
+
+W niniejszym rozdziale przedstawiono wnioski wynikające z przeprowadzonych testów oraz dokonanej analizy problemu. Przedstawiono również możliwości późniejszego rozwoju oraz możliwych do wprowadzenia w aplikacji usprawnień.
+
+\section{Podsumowanie}
+W pracy dokonano analizy problemu jakim jest replikacja obrazów. Przedstawiono dostępne techniki oraz przeanalizowano rozwiązanie tego problemu za pomocą algorytmów genetycznych. Następnie został opisany zaprojektowany algorytm służący do replikacji obrazów. Dokonano analizy wymagań dla implementacji tego algorytmu oraz przedstawiono szczegóły techniczne w formie omówienia struktury dołączonej do pracy aplikacji i załączono instrukcję jej użytkowania. Na końcu przedstawiono wyniki testów mających zbadać jakość rozwiązań zwracanych przez zaprojektowany algorytm oraz wpływ różnych konfiguracji algorytmu na te rozwiązania.   
+
+\section{Wnioski}
+Na podstawie przeprowadzonych testów oraz analizy badanego problemu wyciągnięte zostały przez autora pracy następujące wnioski:
+\begin{itemize}
+    \item Algorytmy genetyczne pozawalają na znalezienie w miarę dokładnego przybliżenia rozwiązania dla postawionego problemu - w przypadku pracy, problemu optymalizacyjnego. Przez \textit{w miarę dokładne} należy rozumieć obrazy podobne wizualnie do obrazu replikowanego i wysoko ocenione przez funkcję celu.
+    \item Algorytmy genetyczne dla pewnych zestawów danych zatrzymują się w lokalnym optimum i nie są w stanie wygenerować dokładniejszego rozwiązania, niż to już przez nie osiągnięte.
+    \item Duży wpływ na jakość uzyskiwanych rozwiązań ma, podobnie jak w procesie naturalnej ewolucji, zmienność w genotypach generowanych przez algorytm rozwiązań co daje szansę na uzyskanie rozwiązania bardziej zbliżonego do optymalnego.
+\end{itemize}
+
+\section{Możliwe rozszerzenia pracy}
+W czasie pisania pracy, zarówno części teoretycznej, jak i praktycznej, udało się zebrać pewną ilość uwag odnośnie możliwych udoskonaleń pracy oraz jej przyszłego rozwoju. Do najważniejszych zaliczyć należy:
+\begin{itemize}
+    \item rozszerzenie algorytmu o dodatkowe operatory genetyczne oraz sposoby selekcji osobników do utworzenia kolejnych pokoleń,
+    \item zbadanie wpływu na jakość rozwiązań innych przestrzeni barw, np. HSV, HSL,
+    \item optymalizacje algorytmu w celu przyśpieszenia jego działania,
+    \item zbadanie innego sposobu oceniania jakości rozwiązań przez algorytm (funkcja celu),
+    \item porównanie opisywanego rozwiązania z innymi dostępnymi technikami replikacji (\textit{machine learning)},
+    \item stworzenie warstwy GUI dla lepszej prezentacji wyników oraz wygodniejszej konfiguracji algorytmu.
+\end{itemize}

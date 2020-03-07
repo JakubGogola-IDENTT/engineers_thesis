@@ -1,0 +1,107 @@
+\chapter{Instrukcja użytkownika}
+\thispagestyle{chapterBeginStyle}
+\label{rozdzial4}
+
+\section{Wymagania systemowe}
+
+Program był testowany na systemach operacyjnych \texttt{Ubuntu 19.10 Eoan Ermine} oraz \texttt{macOS 10.15 Catalina} oraz przy użyciu języka \texttt{Go} w wersji \texttt{1.13}. Zaleca się uruchamianie programu na systemach \textit{unix-like} (np. \texttt{macOs}, \texttt{Ubuntu}, \texttt{Debian}, \texttt{ArchLinux}) oraz przy użyciu kompilatora \texttt{Go} co najmniej w wersji \texttt{1.11} ze względu na konieczność obsługi \texttt{Go modules}. Oprogramowanie nie zostało przetestowane na systemie operacyjnym \texttt{Windows} i nie jest gwarantowane jego działanie na tymże. 
+
+\section{Parametry programu}
+Tak jak opisano w rozdziałach poświęconych strukturze oraz implementacji algorytmu, program przyjmuje na wejściu zbiór argumentów pozwalających na konfigurację zachowania algorytmu. Poniżej zostanie przedstawiony sposób ich definiowania oraz uruchamiania programu. 
+
+\subsection{Wywołanie konsolowe}
+W przypadku, gdy program jest uruchamiany poprzez konsolę systemową parametry zostają zdefiniowane przez następujące flagi wywołania:
+\begin{itemize}
+    \item \texttt{-best} - flaga określa liczbę najlepszych osobników, które zostaną wybrane do tworzenia każdej kolejnej populacji oraz zapisane w ostatniej iteracji algorytmu, jako pliki wynikowe. Flaga ta powinna być liczbą typu \texttt{uint} (wartość domyślna: \texttt{10}).
+    \item \texttt{-generation-size} - flaga określa rozmiar pojedynczego pokolenia w jednej iteracji algorytmu. Przyjmuje wartość typu \texttt{uint} (wartość domyślna: \texttt{200}).
+    \item \texttt{-generations} - flaga określająca maksymalną liczbę iteracji algorytmu. Przyjmuje wartość typu \texttt{uint} (wartość domyślna: \texttt{1000}).
+    \item \texttt{-gray-scale} - flaga określająca, czy algorytm powinien działać na obrazach w skali szarości. Flaga przyjmuje wartość typu \texttt{bool} (wartość domyślna: \texttt{false}).
+    \item \texttt{-image-dir} - ścieżka do oryginalnego obrazu, który ma zostać zreplikowany przez algorytm. Flaga przyjmuje wartość typu \texttt{string}. Parametr ten jest wymagany, aby uruchomić program.
+    \item \texttt{-mutation-chance} - flaga określająca prawdopodobieństwo wystąpienia mutacji. Flaga przyjmuje wartość typu \texttt{float} (wartość domyślna: \texttt{0.2}).
+    \item \texttt{-with-crossing} - flaga określająca, czy powinien zostać zastosowany operator krzyżowania. Flaga przyjmuje wartość typu \texttt{bool} (wartość domyślna: \texttt{false}).
+    \item \texttt{-from-file} - flaga przyjmuje ścieżkę do pliku konfiguracyjnego. Jeżeli została ona ustawiona, program ignoruje pozostałe flagi, jeśli są, i czyta parametry ze wskazanego pliku. Flaga przyjmuje wartość typu \texttt{string}.
+    \item \texttt{-help} - jeżeli flaga jest ustawiona to zostają wyświetlone informacje na temat dostępnych parametrów wywołania, sposobu ich użycia oraz domyślnych wartości.
+\end{itemize}
+
+Program może zostać skompilowany za pomocą polecenia \texttt{go build main.go}, a następnie uruchomiony \texttt{./main}, lub bezpośrednio skompilowany i uruchomiony za pomocą polecenia \texttt{go run main.go}. Po zakończeniu działania programu można dokonać czyszczenia plików wygenerowanych przez kompilator za pomocą polecenia \texttt{go clean}. Wszystkie polecenia należy wywołać w głównym katalogu zawierającym plik \texttt{main.go}. 
+
+\subsubsection{Przykładowe wywołania}
+\begin{verbatim}
+    #!/bin/bash
+    go build main.go
+    ./main -image-dir ./images/image_in_gray_scale.png \
+            -best 5 \
+            -generation-size 50 \
+            -generations 5000 \
+            -gray-scale \
+            -mutation-chance 0.6 \
+            -with-crossing 
+    go clean
+    
+    go run main.go -image-dir ./images/image_in_rgba_scale.png
+\end{verbatim}
+
+\subsection{Plik konfiguracyjny}
+Alternatywnym rozwiązaniem jest przekazanie parametrów wywołania przez plik konfiguracyjny. Aby to zrobić, należy użyć flagi \texttt{-from-file} i podać ścieżkę do tego pliku. Konfiguracja powinna zostać zapisana w formacie \texttt{JSON}. Dostępne są następujące atrybuty, które mogą zostać przekazane poprzez plik konfiguracyjny.
+
+\subsubsection{Przykładowy plik konfiguracyjny}
+\begin{verbatim}
+    {
+        "NumOfIterations": 2000,
+        "SizeOfGeneration": 50,
+        "PathToImage": "./images/example_image.jpg",
+        "NumOfBest": 4,
+        "MutationChance": 0.8,
+        "GrayScale": false,
+        "WithCrossing": true
+    }
+\end{verbatim}
+
+\subsubsection{Przykładowe uruchomienie programu z plikiem konfiguracyjnym}
+\begin{verbatim}
+    #!/bin/bash
+    
+    go run main.go -from-file ./config.json
+\end{verbatim}
+
+Każdy parametr ma swój odpowiednik w opisanych w poprzedniej części rozdziału fladze wywołania programu.
+\begin{itemize}
+    \item \texttt{NumOfBest} - parametr określa liczbę najlepszych osobników, które zostaną wybrane do tworzenia każdej kolejnej populacji oraz zapisane w ostatniej iteracji algorytmu, jako pliki wynikowe. Parametr ten powinien być liczbą typu \texttt{uint} (wartość domyślna: \texttt{10}).
+    \item \texttt{SizeOfGeneration} - parametr określa rozmiar pojedynczego pokolenia w jednej iteracji algorytmu. Przyjmuje wartość typu \texttt{uint} (wartość domyślna: \texttt{200}).
+    \item \texttt{NumOfIterations} - parametr określający maksymalną liczbę iteracji algorytmu. Przyjmuje wartość typu \texttt{uint} (wartość domyślna: \texttt{1000}).
+    \item \texttt{GrayScale} - parametr określający, czy algorytm powinien działać na obrazach w skali szarości. Flaga przyjmuje wartość typu \texttt{bool} (wartość domyślna: \texttt{false}).
+    \item \texttt{PathToImage} - ścieżka do oryginalnego obrazu, który ma zostać zreplikowany przez algorytm. Parametr przyjmuje wartość typu \texttt{string}.
+    \item \texttt{MutationChance} - parametr określający prawdopodobieństwo wystąpienia mutacji. Przyjmuje on wartość typu \texttt{float} (wartość domyślna: \texttt{0.2}).
+    \item \texttt{WithCrossing} - Parametr określający, czy powinien zostać zastosowany operator krzyżowania. Przyjmuje wartość typu \texttt{bool} (wartość domyślna: \texttt{false}).
+\end{itemize}
+
+W przypadku, gdy któryś z parametrów nie zostanie wyspecyfikowany w pliku, przyjmie on wartość domyślną. Ponownie, jak w przypadku użycia flag wywołania, koniecznym jest zdefiniowanie parametru \texttt{PathToImage} (odpowiednik \texttt{-image-dir}).
+
+\section{Docker}
+Program może zostać uruchomiony z użyciem oprogramowania \texttt{Docker}. W tym celu zaleca się instalację pakietu \texttt{Docker} w ostatniej dostępnej wersji (testowano na wersji \texttt{19.03.5}). W celu uruchomienia programu należy użyć komendy \texttt{docker-compose up} w folderze zawierającym kod źródłowy programu. W przypadku uruchamiania programu w ten sposób, konfiguracja programu musi zostać podana poprzez plik konfiguracyjny \texttt{config.json} znajdujący się w głównym katalogu z kodem. W przypadku potrzeby modyfikacji ustawień Dockera (w tym - ścieżki dostępowej do pliku konfiguracyjnego), należy dokonać zmian w pliku \texttt{docker-compose.yaml} zgodnie z dokumentacją tego oprogramowania [cf. \cite{DockerDocs}].
+
+\section{Modyfikacja modułu genetyki algorytmu}
+\label{sec:genetics_interface_modifications}
+
+Moduł odpowiedzialny za genetykę algorytmu został zaimplementowany jako interfejs w języku \texttt{Go} i jest on \textit{wymienny}, to jest możliwe jest wykonanie własnej jego implementacji pod warunkiem spełniania określonego interfejsu przedstawionego w \ref{lst:genetics_interface}.
+\begin{lstlisting}[caption={Interfejs modułu genetyki}, captionpos=b, label={lst:genetics_interface}]
+type Genetics interface {
+	Mutate()
+	Fitness(originalImage image.Image)
+	Cross(spec image.RGBA)
+}
+\end{lstlisting}
+W celu własnego zdefiniowania należy zaimplementować metody spełniające interfejs zaprezentowany na \ref{lst:genetics_interface} mając na uwadze, że metoda \texttt{Mutate()} definiuje sposób dokonywania mutacji; metoda \texttt{Fitness(originalImage image.Image)} definiuje funkcję oceny i jako parametr przyjmuje referencję do obrazu oryginalnego; metoda
+\texttt{Cross(spec image.RGBA)} definiuje sposób krzyżowania osobników i jako parametr przyjmuje referencję do osobnika, z którym dany osobnik ma być krzyżowany. Należy mieć na uwadze, że są to struktury z \textit{dowiązanymi} metodami (ang. \textit{function-like objects}) i mogą się odwoływać do pól struktury, na której operują. Przykład został zaprezentowany takiej struktury został zaprezentowany na \ref{lst:function_like_object}.
+
+\begin{lstlisting}[caption={Przykład \textit{function-like object}}, captionpos=b, label={lst:function_like_object}]
+type dummyStruct struct {
+    dummyProperty string
+} 
+
+func (ds *dummyStruct) dummyMethod() {
+
+}
+\end{lstlisting}
+
+W celu użycia własnego przygotowanego modułu należy podmienić plik \texttt{module.go} znajdujący się w katalogu \texttt{/src/genetics}, w którym zaimplementowana jest domyślna genetyka.

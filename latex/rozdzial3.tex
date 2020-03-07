@@ -1,0 +1,173 @@
+\chapter{Implementacja}
+\thispagestyle{chapterBeginStyle}
+\label{rozdzial3}
+
+Na podstawie powyższych definicji i opisów dotyczących algorytmów metaheurystycznych można przedstawić algorytm genetyczny użyty w niniejszej pracy do replikacji obrazów. Algorytm został tutaj przedstawiony jedynie w sposób opisowy. Z implementacją opatrzoną szczegółowymi komentarzami można zapoznać się w kodzie dołączonym do pracy.
+
+\section{Wykorzystywane technologie}
+
+W części implementacyjnej pracy inżynierskiej zdecydowano się na oprogramowanie zaprojektowanego algorytmu w języku \texttt{Go}. Język ten, od roku 2009, w którym została wydana jego pierwsza wersja, bardzo dynamicznie się rozwija. Został on stworzony przez firmę Google i zaprojektowany z myślą, by zostać współczesnym odpowiednikiem języka \texttt{C}. Był on tworzony we współpracy z jednym z twórców \texttt{C} - Brianem W. Kernighanem. Jedną z głównych cech języka jest jego zastosowanie do tworzenia oprogramowania współbieżnego, ponieważ posiada on bardzo rozbudowany model współbieżności. Ze względu na fakt, że algorytmy genetyczne dają się w łatwy sposób urównoleglić, autor zdecydował się na implementację pracy w tym właśnie języku. Całość została zaimplementowana jedynie przy użyciu biblioteki standardowej tego języka ze z względu na jej rozbudowane wsparcie dla operacji na obrazach. Model współbieżności w języku \texttt{Go} został dokładniej opisany w podrozdziale \ref{subsec:concurrency_in_go}.
+
+Ponadto, w pracy użyto narzędzia \texttt{Docker} w celu umożliwienia uruchomienia aplikacji na dowolnym systemie operacyjnym. Pozwala ono uniknąć instalowania wszystkich niezbędnych do uruchomienia aplikacji narzędzi lokalnie, na komputerze użytkownika, a uruchamia program w środowisku wirtualnym z wykorzystaniem tzw. \textit{kontenerów} (cf. \cite{DockerOverview}).
+
+\section{Parametry algorytmu}
+
+\subsubsection{Parametry wejściowe}
+\begin{enumerate}
+    \item \textbf{ścieżka do obrazu oryginalnego} - ścieżka do obrazu wzorcowego w formacie \texttt{JPG} lub \texttt{PNG}.
+    \item \textbf{skala kolorów} - skala kolorów, w której reprezentowane będą poszczególne osobniki (RGBA lub skala szarości) i w której zapisany jest obraz wejściowy.
+    \item \textbf{liczba iteracji} - ograniczenie na liczbę iteracji (pokoleń) algorytmu.
+    \item \textbf{liczba osobników w pokoleniu} - liczba osobników w pojedynczej iteracji (pokoleniu).
+    \item \textbf{liczba najlepszych osobników} - liczba najlepszy osobników określa ile najlepszych rozwiązań (obrazów) zostanie zwrócone po zakończeniu działania algorytmu. Parametr ten wyznacz również ile najlepszych osobników z danej iteracji zostanie wykorzystane do utworzenia kolejnego pokolenia.
+    \item \textbf{operator krzyżowania} - parametr definiujący, czy powinien zostać zastosowany operator krzyżowania. Jeżeli nie jest ustawiony, wówczas stosowany jest jedynie operator mutacji.  
+    \item \textbf{prawdopodobieństwo mutacji} - parametr definiujący prawdopodobieństwo wystąpienia mutacji w materiale genetycznym każdego osobnika, który przyjmuje wartość rzeczywistą z zakresu $[0, 1]$.
+\end{enumerate}
+
+\subsubsection{Parametry wyjściowe}
+
+Algorytm zwraca (w postaci plików \texttt{PNG}) najlepsze osobniki z ostatniego pokolenia algorytmu. Liczba zwracanych osobników definiowana jest przez jeden z parametrów wejściowych algorytmu.
+
+\section{Opis algorytmu}
+
+W tym rozdziale, w poszczególnych jego sekcjach, opisane zostały poszczególne etapy algorytmu zaprojektowanego algorytmu oraz sposób ich implementacji. \ref{lst:pseudocode} przedstawia pseudokod algorytmu.
+
+\begin{algorithm}
+    \begin{algorithmic}[1]
+        \State Stwórz populację początkową o liczebności $t$.
+        \State Użyj operatora mutacji na każdym z osobników z prawdopodobieństwem $p_{m}$.
+        \State Dokonaj oceny każdego osobnika i posortuj je rosnąco malejąco wartości funkcji oceny.
+        \State Wybierz do następnego pokolenia
+        \State Zastosuj operator krzyżowania
+        \State Powtarzaj kroki 2. - 5. aż do momentu osiągnięcia warunku końca algorytmu.
+    \end{algorithmic}
+    \caption{Pseudokod algorytmu replikacji}
+    \label{lst:pseudocode}
+\end{algorithm}
+
+
+\subsection{Wybór populacji początkowej}
+W przypadku opisywanego algorytmu replikacji stworzenie populacji początkowej polega na wygenerowaniu $t$ czarnych obrazów (każdy z kanałów RGB przyjmuje wówczas wartość minimalną $0$) o rozmiarze odpowiadającym rozmiarowi obrazu wzorcowego. Następnie, na każdym z wygenerowanych obrazów umieszczany jest losowy \footnote{Słowo losowy w odniesieniu do kształtu zawsze będzie oznaczać prostokąt o losowym kolorze, wymiarach i losowym położeniu na obrazie} kształt (prostokąt) o losowych wymiarach i losowym położeniu na obrazie. Każdy z kształtów jest półprzeźroczysty co ułatwia późniejsze nakładanie kolejnych kolorów.
+
+\subsubsection{Reprezentacja obrazu w skali RGBA w języku Go}
+
+W języku \texttt{Go} obraz zapisany za pomocą skali RGBA jest reprezentowany przez następującą strukturę przedstawioną w kodzie źródłowym \ref{lst:rgba_struct}.
+\begin{lstlisting}[caption={Struktura reprezentująca obraz w skali RGBA w języku \texttt{GO}}, captionpos=b, label={lst:rgba_struct}]
+type RGBA struct {
+    Pix    []uint8
+    Stride int
+    Rect   Rectangle
+}
+\end{lstlisting}
+Przechowywana jest w niej tablica pikseli obrazu (\texttt{Pix}) i dla każdego piksela zachowana jest kolejność kanałów, tj. R, G, B, A. Każdy kanał każdego piksela jest zakodowany za pomocą zmiennej typu \texttt{uint8} czyli za pomocą 8-bitowej liczby całkowitej bez znaku. Oznacza to, że każdy kanał może przyjmować wartości od $0$ do $255$ ($256$ różnych wartości). Parametr \texttt{Stride} oznacza odległość  (w bajtach) pomiędzy dwoma sąsiadującymi wertykalnie pikselami, czyli długość jednego poziomego rzędu pikseli. \texttt{Rect} to struktura zawierająca wymiary obrazu.
+
+\subsection{Operator mutacji}
+Operator mutacji ma na celu wprowadzenie losowej zmiany w materiale genetycznym każdego osobnika. Na początku działania funkcji odpowiedzialnej za dokonanie mutacji na wybranym osobniku wybierana jest rzeczywista liczba losowa z przedziału $[0, 1]$. Jeżeli jest mniejsza od prawdopodobieństwa wystąpienia mutacji, to w materiale genetycznym bieżącego osobnika wprowadzana jest mutacja. Polega ona na dodaniu losowego kształtu na obrazie. Pojawia się tutaj problem w jaki sposób wybrać kolor obszaru, w którym nakładają się na siebie dwa lub więcej kształtów o różnych kolorach. Przyjęto zasadę, że wówczas jako kolor danego piksela na opisanym obszarze przyjmuje się średnią z wartości wszystkich kanałów koloru piksela na obrazie i piksela w nakładanym w procesie mutacji kształcie.
+
+\subsection{Funkcja oceny}
+
+Funkcja oceny ma na celu przyznanie każdemu z osobników wartości liczbowej, która, odpowiednio wyliczona, pozwoli określić przystosowanie osobnika (jakość jego genotypu, czyli, w języku genetyki, zbioru genów) i później wyznaczyć, które osobniki mogą zostać uznane za najmocniejsze, które za średnio przystosowane, a które zaliczone zostaną do zbioru osobników słabo przystosowanych. 
+
+W prezentowanym w pracy algorytmie funkcja oceny wylicza różnicę pomiędzy wartościami na każdym z kanałów dla każdego piksela obrazu oryginalnego oraz ocenianego osobnika i sumuje wartości bezwzględne wyników. Jest to implementacja wzoru \ref{equ:score_function}. Osobnik, dla którego wartość funkcji oceny jest najmniejsza, będzie uznany za osobnik najmocniejszy, ponieważ najmniej \textit{różni się} od obrazu oryginalnego. Analogicznie - osobnik, dla którego wartość funkcji oceny będzie największa zostanie sklasyfikowany jako osobnik najsłabszy, ponieważ najbardziej różni się od obrazu oryginalnego.
+
+\subsection{Wybór osobników do kolejnej iteracji algorytmu}
+Do każdej kolejnej iteracji algorytmu wybierane są osobniki najmocniejsze względem wartości funkcji oceny w liczbie określonej przez użytkownika. Może to zapewnić szybsze zbieganie algorytmu do poszukiwanego rozwiązania, jak również powoduje mniejszą różnorodność w materiale genetycznym potomstwa.
+\subsection{Operator krzyżowania}
+
+Celem operatora krzyżowania jest wymiana informacji genetycznej pomiędzy dwoma osobnikami. Podobnie, jak w przypadku operatora mutacji, można w łatwy sposób wskazać analogię tej operacji do naturalnego procesu krzyżowania (rozmnażania się organizmów), podczas którego dochodzi do wymiany materiału genetycznego rodziców i stworzenia nowego genotypu potomka.
+
+Operator krzyżowania w przypadku opisywanego algorytmu replikacji wybiera pewien prostokątny obszar na jednym z dwóch osobników przeznaczonych do krzyżowania. Następnie materiał genetyczny jednego osobnika jest wymieniany z drugim, tj. wybrany obszar z pierwszego obrazu jest kopiowany w dokładnie to samo miejsce na obrazie drugim i w ten sam sposób  wybrany obszar z drugiego osobnika jest kopiowany w odpowiadające miejsce na osobniku pierwszym. Osobniki początkowe można określić mianem rodziców, a osobniki powstałe w wyniku krzyżowania określa się osobnikami potomnymi.
+
+
+\section{Obliczenia równoległe a algorytm replikacji}
+\label{sec:concurrency_in_algorithm}
+W implementacji algorytmu replikacji zastosowano model przetwarzania równoległego w celu przyspieszenia obliczeń. Współbieżnie wykonywane są etapy algorytmu, podczas których działa się na osobniki operatorem mutacji i poddaje ocenie oraz proces krzyżowania osobników wybranych do nowej populacji. Synchronizacja pomiędzy wątkami dokonywana jest w momencie tworzenia nowej populacji. Proces odbywa się w ten sam sposób, jaki opisano w rozdziale niniejszej pracy poświęconym analizie problemu, a szczegóły implementacyjne, w raz z odpowiednim komentarze, dostępne są w załączonym do pracy kodzie. 
+
+\subsection{Dekompozycja problemu}
+W celu przystosowania algorytmu genetycznego do przetwarzania równoległego, należy na początku dokonać dekompozycji problemu (cf. \cite{ObliczeniaRownolegle}). W przypadku algorytmów genetycznych najlepiej sprawdzającym się podejściem będzie dokonanie dekompozycji względem danych. W przypadku algorytmu genetycznego za zbiór danych przyjmuje się zbiór wszystkich osobników w danym pokoleniu. Każdemu z dostępnych procesorów zostaje wtedy przydzielona pewna pula osobników, na których zostanie zastosowany operator genetyczny. Oprócz działania operatorami genetycznymi na poszczególne chromosomy, można łatwo zauważyć, że równolegle może być również dokonywana ocena osobników, ponieważ polega ona jedynie na porównaniu danego osobnika z wzorcowym rozwiązaniem.
+
+\subsection{Synchronizacja}
+Dla algorytmów genetycznych wymagana jest synchronizacja pomiędzy działającymi wątkami w celu oceny osobników i wybrania nowej populacji. Po odebraniu przez jednostkę zarządzającą wątkami informacji o wykonaniu przez poszczególne procesory wszystkich zadań, to jest: zadziałaniu na osobniki operatorami genetycznymi i ocenie dopasowania poszczególnych osobników, następuje wybór osobników do kolejnej iteracji algorytmu. Ten etap algorytmu genetycznego nie daje się przystosować do przetwarzania równoległego poprzez fakt, iż muszą być rozważone wszystkie osobniki z bieżącej populacji i utworzona musi zostać populacja kolejna. Ze względu na konieczność porównywania ze sobą wartości funkcji oceny dla każdego osobnika urównoleglenie tego kroku algorytmu jest niemożliwe.
+
+\section{Model współbieżności w języku Go}
+\label{subsec:concurrency_in_go}
+
+\subsection{Gorutyny}
+\label{subsec:gorutines}
+Jedną z cech języka \texttt{Go} jest bardzo dobrze rozwinięty model współbieżności. Jest to jedno z głównych zastosowań języka \texttt{Go}. Główną jednostką używaną w implementacjach wykorzystujących współbieżność w \texttt{Go} jest \textit{gorutyna} (ang. \textit{gorutine}) (cf. \cite{GoByExampleGorutine}). Jest to reprezentacja pojedynczego zadania , której główną cechą jest jej niewielki rozmiar w pamięci maszyny, co pozwala na tworzenie znacznej ich ilości z niewielkim zużyciem zasobów. Gorutyna nie powinna być utożsamiana z pojedynczym wątkiem, bowiem w obrębie jednego wątku można utworzyć wiele gorutyn.
+
+W języky \texttt{Go} są dwa podejścia do problemu przetwarzania współbieżnego. Jeden z zaimplementowanych modeli oparty jest na komunikację pomiędzy gorutynami za pomocą kanałów (ang. \textit{channel}) (cf. \cite{GoByExampleChannel}). Odrębnym podejściem jest użycie do synchronizacji dostępu do pamięci klasycznych mutexów (cf. \cite{GoDocsSync}). Kanały są wykorzystywane przede wszystkim do prowadzenia komunikacji pomiędzy poszczególnymi gorutynami. Mutexy służą do synchronizacji dostępu do określonych części kodu przesz poszczególne gorutyny (cf. \cite{Gorutinse}).
+
+\subsection{Model oparty o komunikację za pomocą kanałów}
+
+W modelu opierającym się na wykorzystaniu kanałów komunikacja pomiędzy poszczególnymi gorutynami odbywa się za struktur, które są pewnym rodzajem strumieni (ang. \textit{pipe}), za pomocą których poszczególne gorutyny mogą przekazywać pomiędzy sobą informacje. Istnieją dwa rodzaje kanałów w języku \texttt{Go} - buforowane i niebuforowane. W przypadku tych pierwszych informacja jest wysyłana przez jedną z gorutyn i bezpośrednio odbierana przez drugą, gdy tylko obie są w stanie odbierać lub wysyłać dane. Kanały buforowane, w odróżnieniu od kanałów niebuforowanych, posiadają dodatkowo zaimplementowaną strukturę kolejki o rozmiarze określanym przez użytkownika. Pozwala to na wysłanie do kanału większej liczby danych przez jedną lub więcej gorutyn korzystających z danego kanału i odebranie wysłanych informacji przez odpowiednią gorutynę. W tym przypadku dane te nie muszą być odebrane natychmiast i strona odbierająca nie musi w danym momencie wykazywać gotowości do odebrania informacji w momencie wysłania ich przez inną gorutynę.
+
+\subsection{Model oparty o mutexy}
+Innym sposobem pozwalającym na synchronizację pomiędzy poszczególnymi gorutynami jest wykorzystanie mutexów, modelu znanego między innymi systemów typu Unix. Wykorzystuje on struktury, które pozwalają na zablokowanie dostępu do określonej struktury (zmiennej) przez daną gorutynę na czas, gdy jest ona przez nią modyfikowana. Nie służą one zatem do komunikacji pomiędzy gorutynami, ale do synchronizacji dostępu do poszczególnych danych. 
+
+Najczęściej, przy tworzeniu oprogramowania współbieżnego w języku \texttt{Go}, wykorzystuje się i łączy oba wymienione modele współbieżności. Stosowne przykłady z obszernym wyjaśnieniem można znaleźć w przytaczanej wcześniej dokumentacji języka.
+
+\subsection{Model współbieżności w języku Go a implementacja algorytmu}
+
+W tym rozdziale opisane rozwiązania oferowane przez model przetwarzania równoległego języka \texttt{Go} zastosowane w implementacji oraz uzasadniono wybór takiego rozwiązania i omówiono jego wydajność.
+
+\subsubsection{Wait groups}
+\label{subsubsec:wait_groups}
+Zgodnie z tym, co opisano w podrozdziale \ref{sec:concurrency_in_algorithm}, w implementacji omawianego w pracy algorytmu zdecydowano się na wprowadzenie równoległego modelu obliczeń. Model współbieżności obecny w języku \texttt{Go} pozwala na implementowanie bardzo złożonych i wydajnych systemów. Fakt, że gorutyny, są \textit{lekkie} w sensie ilości zużytych zasobów urządzenia, umożliwia tworzenie wielu ich instancji z jednoczesnym niewielkim wzrostem zużycia zasobów.
+
+W problemie urównoleglenia omawianego algorytmu zdecydowano się na wykorzystanie udostępnianej przez \texttt{Go} metody nazywanej \textit{wait groups} (cf. \cite{GoDocsWaitGroups}). W przypadku zaprojektowanego algorytmu genetycznego, na etapach, które umożliwiają przetwarzanie równoległe, nie jest wymagana żadna komunikacja pomiędzy poszczególnymi wątkami. Każdy wątek dostaje określone zadanie do wykonania. Wymagane jest jedynie zsynchronizowanie momentu zakończenia pracy przez każdą z utworzonych wcześniej gorutyn. Mechanizm wait groups umożliwia utworzenie wielu instancji gorutyn, gdzie każda z nich wykonuje określone zadanie (stosuje na zadanych osobnikach odpowiednie operatory genetyczne i wylicza dla nich wartość funkcji celu) i monitorowanie stanu, w jakim w danym momencie się znajdują, a dokładniej - ile z nich w danym momencie zakończyło już swoją pracę, a ile nadal jest aktywnych i wykonuje jeszcze obliczenia. 
+
+\begin{lstlisting}[caption={Mechanizm wait groups dostępny w bibliotece \texttt{sync} języka \texttt{Go}. Przedstawiany tutaj kod i jego działanie zostało opisane w sekcji \ref{subsubsec:wait_groups}}, captionpos=b, label={lst:wait_groups}]
+package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+func worker(id int, wg *sync.WaitGroup) {
+	fmt.Printf("Worker %d starting\n", id)
+
+	time.Sleep(time.Second)
+	
+	fmt.Printf("Worker %d done\n", id)
+	wg.Done()
+}
+
+func main() {
+	var wg sync.WaitGroup
+
+	fmt.Println("Workers starting")
+	for i := 0; i < 5; i++ {
+		wg.Add(1)
+		go worker(i, &wg)
+	}
+
+	wg.Wait()
+	fmt.Println("All workers done")
+}
+\end{lstlisting}
+
+W przykładzie (kod źródłowy \ref{lst:wait_groups}) zaprezentowano prosty przykład wykorzystywania opisywanego mechanizmu (zaczerpnięty on został z \cite{GoDocsWaitGroups}). Zostaje zadeklarowana zmienna \texttt{var wg sync.WaitGroup} (struktura \texttt{WaitGroup} pochodzi z biblioteki \texttt{sync} (dokumentacja: \cite{GoDocsSync}]). Następnie w pętli zostaje utworzonych 5 gorutyn, gdzie każda wykonuje kod zadeklarowanej wcześniej funkcji \texttt{worker}. Przy tworzeniu każdej z nich zostaje wywołana metoda \texttt{wg.Add(1)}. Zwiększa ona licznik aktwynych gorutyn wewnątrz omawianej struktury (zmienna \texttt{wg}). Jednocześnie, do przy każdym wywołaniu funkcji \texttt{worker} zmienna \texttt{wg} zostaje do niej przekazana jako jeden z argumentów wywołania poprzez referencję. Po zakończeniu wykonywania pętli \texttt{for} zostaje wywołana w głównym wątku metoda \texttt{wg.Wait()}, która oczekuje na zakończenie działania przez wszystkie gorutyny. Każda z gorutyn (w tym przypadku - każda z instancji funkcji \texttt{worker}) \textit{informuje} o zakończeniu swojego działania poprzez wywołanie metody \texttt{wg.Done()}, która zmniejsza licznik aktywnych w danym momencie gorutyn wewnątrz struktury \texttt{sync.WaitGroup}. W momencie, gdy licznik osiągnie wartość 0, metoda \texttt{wg.Wait()} kończy swoje działanie i w głównym wątku zostaje wypisana informacja o zakończeniu działania przez wszystkie utworzone wcześniej w pętli gorutyny. Ponieżej zaprezentowano komunikaty wypisywane przez powyższy program na standardowe wyjście (\texttt{?} oznaczono komendy wpisywane przez użytkownika, a \texttt{>} komunikaty wypisywane przez program na standardowe wyjście).
+
+\begin{verbatim}
+? go run main.go
+> Workers starting
+> Worker 4 starting
+> Worker 0 starting
+> Worker 3 starting
+> Worker 1 starting
+> Worker 2 starting
+> Worker 2 done
+> Worker 1 done
+> Worker 4 done
+> Worker 0 done
+> Worker 3 done
+> All workers done
+?
+\end{verbatim}
+
+\subsubsection{Zastosowane rozwiązanie a wydajność}
+W \ref{subsec:gorutines} opisano gorutynę jako strukturę \textit{lekką} w kontekście zużywanych zasobów na urządzeniu, na którym został uruchomiony program. Ponadto, w prezentowanej implementacji algorytmu replikacji nie jest wymagana żadna komunikacja pomiędzy pojedynczymi, wykonywanymi współbieżnie zadaniami. Istotny jest jedynie ustalenie momentu, w którym wszystkie uruchomione gorutyny zakończą swoje działanie. W związku z taką specyfikacją przedstawionego algorytmu, autor pracy zdecydował się na wykorzystanie do urównoleglenia obliczeń prezentowanego w poprzedzającej sekcji mechanizmu \textit{wait groups}. Liczba określonych gorutyny odpowiada albo maksymalnej liczbie osobników w populacji (zadanie polegające na zastosowaniu operatora mutacji i wyliczeniu funkcji oceny), albo połowie tej wartości (działanie operatorem krzyżowania). Ze względu na cechy tych struktur możliwym było zrzucenie odpowiedzialności na zarządzanie zasobami na mechanizmy zastosowane w języku \texttt{Go}. 
+
+% TODO: benchmark

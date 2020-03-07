@@ -1,0 +1,30 @@
+\chapter{Zawartość płyty CD}
+\thispagestyle{chapterBeginStyle}
+\label{plytaCD}
+
+Płyta CD dołączona do niniejszej pracy zawiera następujące elementy:
+\begin{enumerate}
+    \item Kody źródłowe pisemnej części pracy w języku \LaTeX wraz z niezbędnymi grafikami.
+    \item Skompilowany ze źródeł plik PDF z pracą.
+    \item Kody źródłowe części implantacyjnej w języku \texttt{Go}.
+\end{enumerate}
+
+Struktura katalogów na płycie CD została przedstawiona na \ref{fig:dir_structure}.
+
+\begin{figure}[h]
+    \centering
+    \framebox[\textwidth]{%
+        \begin{minipage}{0.9\textwidth}
+          \dirtree{%
+            .1 /latex.
+            .1 /src.
+                .2 /genetics.
+                .2 /cofig.
+            .1 /pdf.
+            }
+        \end{minipage}
+    }
+    \caption{Struktura plików}
+    \label{fig:dir_structure}
+\end{figure}
+W katalog \texttt{/latex} znajdują się kody źródłowe pisemnej części pracy, w katalogu \texttt{/pdf} znajduje się skompilowany plik PDF, a w \texttt{/src} pliki źródłowe części implementacyjnej.

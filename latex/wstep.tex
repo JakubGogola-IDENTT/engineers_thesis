@@ -1,0 +1,30 @@
+\chapter{Wstęp}
+\thispagestyle{chapterBeginStyle}
+\label{wstep}
+
+W niniejszej pracy zbadano problem replikacji obrazów za pomocą algorytmów genetycznych. Głównym celem autora, zgodnie z tytułem pracy, było ujęcie problemu replikacji w ramy języka algorytmów genetycznych. W dobie powszechnego wykorzystania technik udostępnianych przez \textit{machine learning}, autor podjął się analizy podejścia stosowanego zanim nastąpił tak dynamiczny rozwój wspomnianej gałęzi informatyki. W pracy dokonano analizy możliwości algorytmów genetycznych oraz, w sposób eksperymentalny, spróbowano wyznaczyć takie ograniczenia zadane tymże, które pozwalają uzyskać najlepsze rezultaty. 
+
+Z racji, że praca ta ma charakter inżynierski, oprócz ujęcia teoretycznego, autor przygotował również implementację prezentowanego na jej stronach algorytmu w celu praktycznego zbadania sposobu jego działania oraz generowanych przez niego wyników. 
+
+Wartym uwagi jest również fakt, że oprócz przedstawionego w pracy ujęcia problemu replikacji w ramy formalne, autor podjął się opracowania tego tematu również z powodu chęci zbadania jakie efekty daje takie rozwiązanie od strony czysto wizualnej. Skupił się on na replikacji obrazów w ten sposób, aby uzyskać wynik najbardziej zbliżony do oryginalnego, ale należy tutaj zaznaczyć, że opisywane w niniejszej pracy rozwiązanie może być zastosowane chociażby do generowania grafiki typu \textit{pixelart}. Możliwym zastosowaniem jest replikacja fraktali, czyli pewnych struktur z zauważalnymi regularnościami. Problem ten został poruszony w pracy \cite{ArtificialArt}, która dotyczy generowania szeroko pojętej sztuki za pomocą właśnie algorytmów genetycznych i technik zbliżonych do tych, które zostały zastosowane w niniejszej pracy.
+
+\section{Struktura pracy}
+Praca została podzielona na siedem rozdziałów, które dotyczą zarówno części teoretycznej pracy jak i takie, w których omówiono szczegóły implementacyjne. Przedstawiono w nich również analizę otrzymanych wyników oraz wnioski uzyskane z przeprowadzonych badań nad problemem.
+
+Pierwszy rozdział pracy to niniejszy wstęp, będący krótkim wprowadzeniem w ideę i cel przyświecający jej autorowi.
+
+W rozdziale \ref{rozdzial1} zawarto dokładną analizę problemu replikacji. Przedstawiono podstawowe pojęcia dotyczące teorii obliczeń i złożoności obliczeniowej, idę działania i zastosowanie algorytmów metaheurystycznych ze szczególnym wyróżnieniem algorytmów genetycznych. Dokonano również analizy problemu replikacji ujętej w ramy problemu optymalizacyjnego. Załączono przegląd alternatywnych rozwiązań.
+
+W rozdziale \ref{rozdzial2} przedstawiono strukturę projektu w postaci wymagań, które powinien spełniać algorytm oraz jego implementacja - zbiór parametrów wejściowych i wyjściowych oraz wymagania funkcjonalne i niefunkcjonalne.
+
+Rozdział \ref{rozdzial3} dotyczy implementacji algorytmu w języku \texttt{Go}. Omówiono tutaj, w sposób opisowy, poszczególne części implementacji. Przedstawiono również skrótowo sposób reprezentacji obrazów oraz model współbieżności w wybranym przez autora języku programowania.
+
+W rozdziale \ref{rozdzial4} spisana została instrukcja obsługi programu, uwagi dotyczące jego modyfikacji oraz przykłady kodu, które pozwalają na uruchomienie implementacji. Zawarto tam również spis wymagań technicznych oraz potrzebnych narzędzi i bibliotek.
+
+Rozdział \ref{rozdzial5} zawiera szczegółową analizę uzyskanych przez autora wyników ze szczególnym naciskiem na przeanalizowanie wpływu parametrów wejściowych programu na jakość otrzymywanych rozwiązań.
+
+Podsumowanie pracy (część \ref{podsumowanie}) zawiera wyciągnięte na podstawie otrzymanych wyników wnioski oraz ogólne podsumowanie pracy.
+
+Do pracy została załączona bibliografia zawierająca spis wykorzystanej literatury oraz opis zawartości płyty CD z kodami źródłowymi dołączonej do pracy, który znajduje się w dodatku \ref{plytaCD}. 
+
+
