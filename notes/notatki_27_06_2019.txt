@@ -1,8 +1,0 @@
-parametry do przebadania:
-- rozmiar populacji
-- liczba pokoleń (treshold - epsilon na ..)
-- podejście turniejowe!!!
-- wykres - liczba barw oryginalu / liczba barw wyniku / dokladność
-- entropia oryginału 
-- mało pseudokodu
-- 

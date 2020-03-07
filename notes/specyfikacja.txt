@@ -1,6 +1,0 @@
-Tytuł pracy: Replikacja obrazów za pomocą algorytmów genetycznych
-
-Tytuł pracy w języku angielskim: Image replication using genetic algorithms
-
-Motywacja wyboru tematu pracy inżynierskiej: 
-Algorytmy metaheurystyczne to rodzina algorytmów, które głównie są wykorzystywane do rozwiązywania problemów optymalizacyjnych. Klasycznym zastosowaniem jest używanie metahuerystyk do problemu  Ten sposób szukania rozwiązań można oczywiście przenieść na inne dziedziny i problemy. Jednym z przykładów takiego problemu może być chociażby próba replikacji obrazów - wyprodukowanie bardzo podobnej wersji zdjęcia na podstawie posiadanego oryginału. 
